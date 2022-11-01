@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Blanc">
+
+<title>Introducción al análisis de datos con R - 1&nbsp; Introducción</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/import.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Introducción al análisis de datos con R</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Prefacio</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/import.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importación de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/dataframes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Estructura de data frames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/data_analisis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos con R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/data_manipulation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulación de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/visualization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Visualización de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/cierre.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Próximos pasos</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenido</h2>
+   
+  <ul>
+  <li><a href="#introducción-a-r-funciones-y-rstudio" id="toc-introducción-a-r-funciones-y-rstudio" class="nav-link active" data-scroll-target="#introducción-a-r-funciones-y-rstudio"><span class="toc-section-number">2</span>  Introducción a R, funciones y RStudio</a>
+  <ul class="collapse">
+  <li><a href="#interacción-con-r" id="toc-interacción-con-r" class="nav-link" data-scroll-target="#interacción-con-r"><span class="toc-section-number">2.1</span>  Interacción con R</a></li>
+  <li><a href="#rstudio-pronto-posit" id="toc-rstudio-pronto-posit" class="nav-link" data-scroll-target="#rstudio-pronto-posit"><span class="toc-section-number">2.2</span>  RStudio (pronto POSIT)</a></li>
+  <li><a href="#funciones" id="toc-funciones" class="nav-link" data-scroll-target="#funciones"><span class="toc-section-number">2.3</span>  Funciones</a></li>
+  <li><a href="#boom" id="toc-boom" class="nav-link" data-scroll-target="#boom"><span class="toc-section-number">2.4</span>  BOOM!</a></li>
+  <li><a href="#parámetros" id="toc-parámetros" class="nav-link" data-scroll-target="#parámetros"><span class="toc-section-number">2.5</span>  Parámetros</a></li>
+  <li><a href="#tuya-héctor" id="toc-tuya-héctor" class="nav-link" data-scroll-target="#tuya-héctor"><span class="toc-section-number">2.6</span>  Tuya Héctor!</a></li>
+  <li><a href="#posibles-soluciones" id="toc-posibles-soluciones" class="nav-link" data-scroll-target="#posibles-soluciones"><span class="toc-section-number">2.7</span>  Posibles soluciones</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Blanc </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="introducción-a-r-funciones-y-rstudio" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Introducción a R, funciones y RStudio</h1>
+<section id="interacción-con-r" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="interacción-con-r"><span class="header-section-number">2.1</span> Interacción con R</h2>
+<p>Como bien lo describe su página web, <a href="https://www.r-project.org/"><strong>R</strong></a> es un lenguaje desarrollado para análisis matemático-estadístico. En 1995 evoluciona de su antecesor, el lenguaje de programación S, y comienza su expansión por el mundo académico, la cual hoy complementa con la ciencia de datos. Junto con Python, es el más usado dentro del rubro.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-AC4C7ACA.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>Un lenguaje de programación interactúa con el usuario, generalmente, a través de una consola, en donde el usuario ingresa ciertas “ordenes” al lenguaje, y éste devuelve un resultado. El ejemplo más sencillo es si usáramos R como una calculadora.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">+</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<p>Como puede apreciarse, yo envío una orden a R: que sume 2 + 2, y éste me devuelve el resultado. Además de esto, podría haber almacenado dicho resultado dentro de un objeto. Los objetos en R son básicamente elementos que guardan información que nosotros les depositamos dentro, y que tenemos que darles un nombre para luego referirnos a ellos. Por ejemplo, guardaré el resultado de esta suma dentro de un objeto que se llame “resultado_suma”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>resultado_suma <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Varias cosas: para empezar, puede apreciarse que para asignar un resultado a un objeto, debemos utilizar el “<strong>&lt;-</strong>”, o <em>asignador</em>. Esto refiere a que básicamente todo lo que esté a la derecha del símbolo será almacenado en el objeto de la izquierda. Por otro lado, ¿por qué usé un guión bajo para nombrar a mi objeto? Es que <strong>R no permite espacios en nombres de objetos,</strong> tampoco tildes ni caracteres especiales fuera de los básicos como el guión bajo. Se recomienda sustituir los espacios por guiones o mayúsculas. Finalmente vemos que no ha devuelto nada la consola, eso es porque se ha guardado el valor correctamente, <strong>al almacenar valores la consola no devuelve ningún resultado, para acceder al mismo hay que llamar al objeto creado.</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>resultado_suma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>Finalmente, los objetos en R también inteactúan entre ellos. Podemos generar distintos objetos y obtener resultados al generar su interacción. Por ejemplo, a continuación tomaré el objeto ya existente <em>resultado_suma</em>&nbsp;y le aplicaré una serie de interacciones.</p>
+<p>Primero, veremos cómo R permite seguir interactuando con los objetos luego de haberlos creado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>resultado_suma <span class="sc">+</span> <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14</code></pre>
+</div>
+</div>
+<p>Estas operaciones pueden almacenarse en un nuevo objeto o reescribir al anterior. Esto podríamos haberlo hecho si al nuevo objeto lo hubiéramos llamado <em>resultado_suma.</em> Esta acción habría eliminado el viejo objeto, siendo suplantado por el nuevo, con un distinto valor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nuevo_objeto_suma <span class="ot">&lt;-</span> resultado_suma <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>nuevo_objeto_suma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14</code></pre>
+</div>
+</div>
+<p>Finalmente, se ve a los objetos interactuar entre ellos. El resultado podría haberse guardado en un nuevo objeto a su vez.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nuevo_objeto_suma <span class="sc">-</span> resultado_suma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+</section>
+<section id="rstudio-pronto-posit" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="rstudio-pronto-posit"><span class="header-section-number">2.2</span> RStudio (pronto POSIT)</h2>
+<p>Programar vinculándose tan solo con la consola puede ser un poco contra intuitivo. Felizmente hay herramientas que permiten hacerle la vida más fácil al analista. En R, sin dudas la más popular es <a href="https://www.rstudio.com/">RStudio</a>.</p>
+<p>RStudio es el IDE principal de R. Un <a href="https://en.wikipedia.org/wiki/Integrated_development_environment">IDE</a> (Integrated Development Environment) es un programa pensado para desarrollar software. En este caso, como R es un lenguaje utilizado para el análisis de datos, está pensado específicamente para este fin.</p>
+<p>Algunos IDE sirven para un lenguaje de programación específico, y otros aceptan varios. El más famoso es <a href="https://code.visualstudio.com/">VSCode</a>, de Microsoft, en donde también se puede usar R, pero no es tan popular dentro de la comunidad. RStudio admite varios lenguajes de programación además de R, entre ellos Python, JavaScript y Julia.</p>
+<p>Finalmente, RStudio se está convirtiendo en <a href="https://posit.co/">posit</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/rstudio2_gy2jzi.webp" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>RStudio tiene cuatro grandes secciones, tal como se muestra en la imagen previa. A continuación se detallarán:</p>
+<ul>
+<li><p><strong>Script:</strong> es el editor de texto dentro de RStudio, es donde se escriben los comandos que luego se enviarán a la consola para su ejecución. Permite al analista mantener ordenado y documentado todo lo que ha hecho en R y puede guardarse para luego o enviarse como cualquier documento. Es el principal socio del analista y puede trabajarse con varios a la vez. Por lo general, cuando abrimos RStudio no aparece, se debe abrir uno nuevo.</p></li>
+<li><p><strong>Consola:</strong> es donde R efectivamente trabaja y ejecuta los comandos que se le van enviando. Vendría a ser lo utilizado en el módulo anterior insertado dentro de una herramienta que permite más funciones.</p></li>
+<li><p><strong>Enviroment:</strong> es el listado de objetos que se van creando en R. En el caso de los ejemplos anteriores, aparecerían listados <em>resultado_suma</em> y <em>nuevo objeto_suma.</em> También aparecen los dataframes y las funciones creadas por el usuario.</p></li>
+<li><p><strong>Output:</strong> esta pestaña sirve para varias cuestiones. Para empezar, muestra los gráficos generados en R, tal como aparece en la imagen, pero también permite ver los archivos del proyecto de R, y los paquetes. También, cuando se requiera, aparecerá la documentación de ayuda de las funciones utilizadas.</p></li>
+</ul>
+</section>
+<section id="funciones" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="funciones"><span class="header-section-number">2.3</span> Funciones</h2>
+<p>En R se programa. Aprender a programar es un proceso de largo aliento, no es como una suite de bussines analytics como Power BI.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Puede llevar meses sentirse a gusto con la programación. Lo fundamental es la práctica. Felizmente, no necesitamos ser expertos en programación para realizar análisis de datos.</p>
+<p>Una librería es una serie de funciones que podemos descargar y utilizar para llevar a cabo nuestros propósitos en R (por ejemplo, importar un archivo con datos).</p>
+<p>Y… qué es una función?</p>
+<p>Una función es un bloque de código que permite que realice determinada acción.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mi_funcion <span class="ot">&lt;-</span> <span class="cf">function</span>() { </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Hola chiques!"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="boom" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="boom"><span class="header-section-number">2.4</span> BOOM!</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mi_funcion</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Hola chiques!"</code></pre>
+</div>
+</div>
+</section>
+<section id="parámetros" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="parámetros"><span class="header-section-number">2.5</span> Parámetros</h2>
+<p>Los parámetros son valores que se sustituirán por aquellos que necesitemos al llamar a la función.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nombre_completo <span class="ot">&lt;-</span> <span class="cf">function</span>(nombre, apellido) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(nombre, apellido)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Suelen tener nombres que explicitan lo que hacen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nombre_completo</span>(<span class="st">"Homero"</span>, <span class="st">"Simpson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Homero Simpson"</code></pre>
+</div>
+</div>
+</section>
+<section id="tuya-héctor" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="tuya-héctor"><span class="header-section-number">2.6</span> Tuya Héctor!</h2>
+<p>Ahora les toca a ustedes:</p>
+<p>Cree una función que tome dos números y devuelva la suma de ambos.</p>
+<p>Cree una función que tome tres valores:</p>
+<ul>
+<li><p>Dos serán números</p></li>
+<li><p>Y el tercero será la operación que querrá que ocurra entre los otros dos valores ingresados.</p></li>
+<li><p>Debe poder: sumar, restar y multiplicar.</p></li>
+<li><p>Debe realizar la operación solicitada y devolver el valor</p></li>
+<li><p>Conviene googlear sobre condicionales en R ;)</p></li>
+</ul>
+</section>
+<section id="posibles-soluciones" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="posibles-soluciones"><span class="header-section-number">2.7</span> Posibles soluciones</h2>
+<div class="cell">
+<details>
+<summary>Posible solución</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>suma <span class="ot">&lt;-</span> <span class="cf">function</span>(numero_1, numero_2){</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(numero_1 <span class="sc">+</span> numero_2)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">suma</span>(<span class="dv">250</span>,<span class="dv">50</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>operacion <span class="ot">&lt;-</span> <span class="cf">function</span>(numero_1, numero_2, operacion){</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (operacion <span class="sc">==</span> <span class="st">"sumar"</span>){</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numero_1 <span class="sc">+</span> numero_2)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (operacion <span class="sc">==</span> <span class="st">"restar"</span>){</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numero_1 <span class="sc">-</span> numero_2)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (operacion <span class="sc">==</span> <span class="st">"multiplicar"</span>){</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(numero_1 <span class="sc">*</span> numero_2)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"Error"</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="fu">operacion</span>(<span class="dv">10</span>,<span class="dv">5</span>, <span class="st">"sumar"</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">operacion</span>(<span class="dv">10</span>,<span class="dv">5</span>, <span class="st">"restar"</span>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="fu">operacion</span>(<span class="dv">10</span>,<span class="dv">5</span>, <span class="st">"multiplicar"</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="fu">operacion</span>(<span class="dv">10</span>,<span class="dv">5</span>, <span class="st">"dividir"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Para ver más sobre la relación de R y Python ir a <a href="https://www.linkedin.com/pulse/r-o-python-cu%C3%A1l-es-el-mejor-para-la-ciencia-de-datos-daniel-blanc/">este artículo</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Ver artículo: <a href="https://www.linkedin.com/pulse/la-santa-trinidad-del-an%25C3%25A1lisis-de-datos-daniel-blanc/?trackingId=gthGpbnJTJWapZz79uRNlQ%3D%3D">La santa trinidad del análisis de datos</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Prefacio</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/import.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importación de datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,28 @@
+project:
+  type: book
+
+book:
+  title: "Introducción al análisis de datos con R"
+  author: "Daniel Blanc"
+  cover-image: "dancover.png"
+  date: "10/31/2022"
+  chapters:
+    - index.qmd
+    - chapters/intro.qmd
+    - chapters/import.qmd
+    - chapters/dataframes.qmd
+    - chapters/data_analisis.qmd
+    - chapters/data_manipulation.qmd
+    - chapters/visualization.qmd
+    - chapters/cierre.qmd
+
+
+format:
+  html:
+    theme: united
+    number-depth: 2
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+

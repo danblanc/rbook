@@ -1,0 +1,31 @@
+# Prefacio {.unnumbered}
+
+## Sobre este ebook
+
+El objetivo de este ebook es brindarle al lector una introducción amigable pero completa sobre el manejo básico de R para el análisis de datos. Se presupone que quien utilice este manual desde el comienzo, no tenga conocimientos previos de R o de programación, por tanto, podrá utilizar esta herramienta para dar sus primeros pasos en el mundo de la ciencia de datos.
+
+También puede ser de utilidad para quien tenga experiencia, en la medida que cada tanto es de utilidad repasar los conceptos fundamentales, especialmente si hace tiempo que no realizamos determinada tarea, o si nunca se tuvo la necesidad de encarar determinado proyecto, por ejemplo, una Shiny App.
+
+El libro se divide en X capítulos:
+
+1.  Introducción a R, funciones y RStudio
+
+2.  Importación de datos
+
+3.  Estructura de dataframes
+
+4.  Análisis de datos con R
+
+5.  Manipulación de datos
+
+6.  Visualización
+
+7.  Informes interactivos y automatizados
+
+8.  Dashboards interactivos
+
+## Sobre mi
+
+![](images/yo.jpg){fig-align="center" width="400"}
+
+Soy un analista de datos con experiencia en proyectos de analytics y machine learning aplicado a negocios. Actualmente me desempeño como analista de datos senior en el [Instituto Nacional de Estadística](https://www.ine.gub.uy/) y he colaborado en el desarrollo de modelos predictivos para la consultora BCS y en la elaboración de dashboards como consultor independiente. He sido docente de Python, R y Power BI en [Instituto CPE](https://institutocpe.edu.uy/) durante cuatro años, donde también me desempeño como coordinador de proyectos. Finalmente, también fui docente de desarrollo web para [Plan Ceibal](https://www.ceibal.edu.uy/es/jovenes-programar).

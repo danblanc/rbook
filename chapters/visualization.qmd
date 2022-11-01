@@ -1,0 +1,250 @@
+---
+title: "Visualización de datos"
+author: "Daniel Blanc"
+format: 
+  html:
+    self-contained: true
+    toc: true
+    theme: united  
+    toc-title: Contenido
+editor: visual
+echo: true
+warning: false
+---
+
+## Características del gráfico
+
+R y en particular RStudio son herramientas muy útiles para la visualización de datos. El paquete más relevante para esta cuestión es [*ggplot*](https://www.rdocumentation.org/packages/ggplot2/versions/3.3.6)*.* Este paquete tiene una estructura muy particular pero clara a la hora de generar visualizaciones.
+
+Para visualizar esto, vamos a trabajar con el dataset implícito de R, *iris.*
+
+```{r}
+iris <- iris
+head(iris)
+```
+
+Este dataset contiene información sobre distintas flores, como la longitud y anchura de sus pétalos, sépalos y la especie. La función ggplot genera un *canva* en donde se despliega la gráfica. Si tan solo se llama a la función, podemos ver desplegado este espacio vacío.
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+iris %>% 
+  ggplot()
+```
+
+Para poder visualizar lo que hay dentro, debemos dentro de la función *ggplot* delinear el eje x e y (este último es opcional). Por ejemplo, podemos querer generar un gráfico que muestre en barras la cantidad de casos por especie. Para empezar, podemos definir el eje x con las especies.
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species))
+```
+
+Vemos que aparece en el eje x los distintos valores de la variable de especies, junto con el nombre de la variable como título del eje. Ahora resta agregar el tipo de gráfico que queremos mostrar. Para esto, debemos agregarle un elemento concatenado a la función ggplot, que le indica el tipo de gráfico. Por ejemplo, para un gráfico de barras, hay que agregar *geom_bar*.
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species)) +
+  geom_bar()
+```
+
+Por defecto, el geom_bar hace un conteo de valores de cada elemento de la variable y eso es lo que grafica. En este caso, cada elemento tiene 50 casos y es por eso que los despliega iguales. A su vez, el eje refleja la métrica utilizada. Si quisiéramos editar los ejes hay que hacer otra concatenación donde se los indiquemos.
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species)) +
+  geom_bar() +
+  labs(
+    title = "Cantidad de especies",
+    x = "Especies",
+    y = "Cantidad"
+  )
+```
+
+También pueden agregarse otros elementos estéticos al gráfico, como las etiquetas de datos y los colores de las gráficas.
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species)) +
+  geom_bar(fill = 'lightgreen') +
+  labs(
+    title = "Cantidad de especies",
+    x = "Especies",
+    y = "Cantidad"
+  ) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.5)
+```
+
+Finalmente, pueden seleccionarse temas dentro de ggplot que permiten una mejora visual de todos los elementos del gráfico.
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species)) +
+  geom_bar(fill = 'lightgreen') +
+  labs(
+    title = "Cantidad de especies",
+    x = "Especies",
+    y = "Cantidad"
+  ) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.5) +
+  theme_bw()
+```
+
+## Tipos de gráfico
+
+### De barras horizontales
+
+Ya vimos cómo generar un gráfico de barras clásico, pero a veces resulta conveniente tenerlas de forma horizontal. Para esto, se puede usar la función *coord_flip.*
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species)) +
+  geom_bar(fill = 'darkblue') +
+  labs(
+    title = "Cantidad de especies",
+    x = "Especies",
+    y = "Cantidad"
+  ) +
+  geom_text(aes(label = ..count..), stat = "count", hjust = -0.5) +
+  coord_flip() +
+  theme_bw()
+```
+
+Cuando queremos gráficar ciertos datos, conviene previamente armar una tabla que permita simplemente representar los resultados. Si bien ggplot puede elaborarse a partir de cálculos con el dataset entero, conviene dejarle los números dados.
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(promedio_largo_hojas = mean(Petal.Length)) %>% 
+  ggplot(aes(x = Species, y = promedio_largo_hojas)) +
+  geom_bar(stat = 'identity') +
+    labs(
+    title = "Promedio del largo del pétalo",
+    x = "Especies",
+    y = ""
+  ) + 
+  geom_text(aes(label = promedio_largo_hojas), vjust = -0.5) +
+  theme_bw()
+```
+
+### Barras acumuladas
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(
+    promedio_largo_hojas = mean(Petal.Length),
+    promedio_ancho_hojas = mean(Petal.Width)
+  ) %>% 
+  gather("concepto", "valor", 2:3) %>% 
+  ggplot(aes(x= Species, y = valor, fill = concepto)) +
+  geom_bar(stat = 'identity') +
+  theme_bw()
+```
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(
+    promedio_largo_hojas = mean(Petal.Length),
+    promedio_ancho_hojas = mean(Petal.Width)
+  ) %>% 
+  gather("concepto", "valor", 2:3) %>% 
+  ggplot(aes(x= Species, y = valor, fill = concepto)) +
+  geom_bar(stat = 'identity',position = position_dodge()) +
+  theme_bw()
+```
+
+Gráficos de dispersión
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() +
+  theme_bw()
+```
+
+### Histogramas
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Sepal.Length)) +
+  geom_histogram() +
+  theme_bw()
+```
+
+### Boxplot
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Species, y = Sepal.Length)) +
+  geom_boxplot() +
+  theme_bw()
+```
+
+Si quieren conocer a fondo las cuestiones de visualización y ver más tipos de gráficos, recomiendo [este libro](https://r-graphics.org/index.html).
+
+## Desafío
+
+Obtenga el dataset "datos_ventas" y realice las siguientes operaciones:
+
+1.  Genere una gráfica de barras verticales que muestre la cantidad de ventas (filas) que hubo por color de producto.
+2.  Genere un gráfico de barras horizontales que muestre el total de ingreso por departamento.
+3.  Investigue cómo generar un gráfico de lineas que le permita hacer una evolución de las ganancias.
+
+-   Cuidado con los NAs
+
+-   Cada gráfico debe tener una temática junto con sus nombres de ejes y etiquetas.
+
+```{r, eval=FALSE}
+#| code-fold: true
+#| code-summary: "Posible solución"
+library(openxlsx)
+ventas <- read.xlsx("data_ventas.xlsx", detectDates = TRUE)
+
+# Primer ejercicio
+
+ventas %>% 
+  group_by(Color) %>% 
+  summarise(ventas = n()) %>% 
+  ggplot(aes(x = Color, y = ventas)) +
+  geom_col() +
+  labs(
+    title = "Cantidad de ventas por color",
+    x = "",
+    y = ""
+  ) +
+  geom_text(aes(label = ventas), vjust = -0.5) +
+  theme_bw()
+
+# Segundo ejercicio
+
+ventas %>% 
+  mutate(ingreso = Cantidad * Monto) %>% 
+  group_by(Departamento) %>% 
+  summarise(ingreso = sum(ingreso, na.rm = TRUE)) %>% 
+  ggplot(aes(x = Departamento, y = ingreso)) +
+  geom_bar(stat = 'identity') +
+  labs(
+    title = "Ingreso total por departamento",
+    x = "", 
+    y = ""
+  ) +
+  coord_flip() +
+  geom_text(aes(label = ingreso), hjust = 1.1, color = 'white') +
+  theme_bw()
+
+# Tercer ejercicio
+
+ventas %>% 
+  mutate(ingreso = Cantidad * Monto) %>% 
+  group_by(Fecha) %>% 
+  summarise(ingreso = sum(ingreso, na.rm = TRUE)) %>% 
+  ggplot(aes(x = Fecha, y = ingreso)) +
+  geom_line() +
+  labs(
+    title = "Evolución de la ganancia",
+    x = "",
+    y = ""
+  ) +
+  theme_bw()
+```

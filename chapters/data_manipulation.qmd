@@ -1,0 +1,403 @@
+---
+title: "Manipulación de datos"
+author: "Daniel Blanc"
+format: 
+  html:
+    #self-contained: true
+    toc: true
+    theme: united  
+    toc-title: Contenido
+editor: visual
+echo: true
+warning: false
+---
+
+## Combinación y anexión de tablas
+
+En muchas ocasiones debemos trabajar con varias tablas de forma simultánea, y en otras debemos unificarlas para llegar a la tabla final con la que haremos el análisis. Para hacer estas uniones, debemos ya sea combinar las tablas, o anexarlas.
+
+### Anexión
+
+Anexar dos tablas implica "poner una encima de la otra", es decir, que las filas de una de las tablas se unan a la otra. Para alcanzar esto debemos tener dos dataframes con estructura similar, es decir que **tengan la misma cantidad de variables y que éstas tengan encabezados similares**.
+
+Para ejemplificar estos casos vamos a trabajar con una serie de tablas ficticias, que responden a los datos de un restaurant imaginario. Lo primero que importaremos son las tablas de ventas de la semana uno y la semana dos.
+
+```{r}
+semana_1 <- read.csv("../data/Restaurant - Week 1 Sales.csv")
+head(semana_1)
+```
+
+```{r}
+semana_2 <- read.csv("../data/Restaurant - Week 2 Sales.csv")
+head(semana_2)
+```
+
+Tal como puede apreciarse, ambos dataframes tienen dos columnas que corresponden una al id de la comida y otra al id del cliente. Dado que estos dataframes comparten la misma estructura, es posible unirlos. Para hacerlo podemos usar la función *rbind.*
+
+```{r}
+ventas <- rbind(semana_1, semana_2)
+head(ventas)
+```
+
+De esta forma, obtenemos un dataframe de 500 filas y la misma cantidad de columnas.
+
+### Combinación de tablas
+
+Otra clásica necesidad que se presenta a la hora de trabajar con muchas tablas es el tener combinarlas. Las combinaciones suceden mediante reglas de unión: a través de una determinada clave, cuando estas coinciden entre dos tablas, se pegan las columnas. Los tipos de unión son los siguientes:
+
+![](images/joins.webp){fig-align="center"}
+
+-   *INNER JOIN:* solo quedan las filas que tengan la clave en ambos dataset.
+
+-   *FULL JOIN:* quedan todas las filas, sin importar si matchean o no
+
+-   *LEFT JOIN:* las filas de la tabla de la izquierda quedan todas, se agregan las que coincidan de la derecha.
+
+-   *RIGHT JOIN:* las filas de la tabla de la derecha quedan todas, se agregan las que coincidan de la izquierda.
+
+Tidyverse tiene funciones específicas para realizar estas uniones. Comencemos importando las tablas a combinar. La tabla de comidas tiene información sobre el id de cada comida del menú, junto con el nombre del item y su precio.
+
+```{r}
+comida <- read.csv("../data/Restaurant - Foods.csv")
+head(comida)
+```
+
+El objetivo será combinar esta tabla con la de ventas para tener la descripción y el precio de cada item en la tabla principal. La variable que unirá ambas tablas será Food.ID
+
+```{r}
+library(tidyverse)
+union <- ventas %>% inner_join(comida, by = "Food.ID")
+head(union)
+```
+
+Para cada Food.ID, la unión trajo el resto de las columnas de la tabla de comida que coincidiera. Para el caso de los clientes tenemos un problema, y es que la columna por la cual se hará la unión no es similar en ambas tablas. Mientras que en *ventas* la variable se llama Costumer.ID, en *clientes* se llama ID. Por tanto, tengo que adaptar mi función de combinación, aclarando cómo se llama cada variable en cada tabla.
+
+```{r}
+clientes <- read.csv("../data/Restaurant - Customers.csv")
+head(clientes)
+```
+
+Una opción es modificar el nombre de la columna en una de las dos tablas. De otra forma, puede hacerse así:
+
+```{r}
+union <- union %>% inner_join(clientes, by = c("Customer.ID" = "ID"))
+head(union)
+```
+
+De esta forma, obtenemos la tabla final, en donde pueden realizar análisis.
+
+### Desafío
+
+1.  Obtenga las cinco comidas que más se consumen.
+
+2.  Indique qué cliente ha gastado más en el restaurant.
+
+3.  ¿Cuánto ha sido el gasto promedio por sexo?
+
+```{r}
+#| code-fold: true
+#| code-summary: "Posible solución"
+
+cinco_comidas <- union %>% 
+  group_by(Food.Item) %>% 
+  summarise(cantidad = n()) %>% 
+  arrange(desc(cantidad)) %>% 
+  head(5)
+
+cliente_mas_gastador <- union %>% 
+  group_by(Customer.ID, First.Name, Last.Name) %>% 
+  summarise(gasto = sum(Price)) %>% 
+  arrange(desc(gasto)) %>% 
+  head(1)
+
+gasto_por_sexo <- union %>% 
+  group_by(Gender) %>% 
+  summarise(gasto_promedio = mean(Price))
+```
+
+## Manejo de NAs
+
+### Identificación de datos faltantes
+
+Los datos faltantes son una realidad cotidiana dentro del análisis de datos. Toda estructura de información está sujeta a fallas y esto es complementado por la posible carencia de datos provenientes del provedor.
+
+Estos *missing* pueden aparecer de varias formas: celdas vacías, textos vacíos, o elementos que identifiquen que un dato es faltante, por ejemplo, un texto que diga "sin dato".
+
+```{r}
+datos <- read.csv("../data/extras.csv", encoding = "UTF-8")
+head(datos)
+```
+
+Al abrir este dataset, puede observarse con claridad que hay algunos campos que tienen valores faltantes, sin embargo, R no los identifica. Para R hay un valor faltante cuando aparece el elemento *NA.* Si éste no aparece, el contenido del dato tiene un valor. El problema en este caso es que los campos vacíos R no logra identificarlos como NA, hay que indicárselo.
+
+```{r}
+datos <- read.csv(
+  file = "../data/extras.csv", 
+  stringsAsFactors = TRUE, 
+  encoding = "UTF-8", 
+  na.strings = c("", "NA")
+)
+head(datos)
+```
+
+Como puede apreciarse, se agrega un parámetro denominado *na.strings* como forma de indicarle a R cuando un valor de caracter debe tomarse como NA. Además, se ha agregado un parámetro que le pide a R que los valores de texto los almacene como factores. Esto lo hacemos especialmente en este caso, para realizar un conteo de NAs mediante la función *summary.*
+
+```{r}
+summary(datos)
+```
+
+De esta forma, el summary toma los NA como otro valor dentro de las variables, y realiza un conteo. Otra forma de obtener esta información es mediante la función *skim.* Esta función está pensada para realizar una serie de averiguaciones en una tabla y devolver un diagnóstico de los datos muy completo. Para usarla hay que llamar al paquete skimr
+
+```{r}
+library(skimr)
+skim(datos)
+```
+
+### Manejo de datos daltantes
+
+Luego de identificar los valores faltantes de nuestro dataframe, la decisión siguiente a tomar es qué hacer con ellos. Hay varias posibilidades
+
+1.  Eliminar los valores faltantes
+2.  Reemplazar las variables numéricas con:
+    1.  La media, mediana, o algún valor estadístico
+
+    2.  Por ceros
+3.  Reemplazar las variables categóricas con:
+    1.  El valor más frecuente
+
+    2.  Otro valor (por ejemplo: "Otro")
+
+#### Eliminar valores faltantes
+
+Si decidimos eliminar los valores faltantes, podemos usar la función *drop_na,* del paquete *tidyverse,* que elimina la fila entera en donde encuentra un NA.
+
+```{r}
+library(tidyverse)
+datos %>% drop_na() %>% head()
+```
+
+Esta función resulta bastante flexible y permite varios tratamientos de NA. Por ejemplo, si quisiéramos eliminar NA de alguinas columnas en particular, podemos aclarárselo.
+
+```{r}
+datos %>% drop_na(any_of(c("date", "product"))) %>% head()
+```
+
+#### Reemplazar variables numéricas y categóricas
+
+Otras veces necesitamos no eliminar, sino reemplazar los valores faltantes por un valor que resulte conveniente.
+
+> La decisión sobre este procedimiento debe ser acorde al contenido conceptual del dataset y no hay una solución única para todas las ocasiones.
+
+Si queremos generar un reemplazo de NAs por un valor calculado, digamos, la media de esa variable, podemos guardar dicho valor en un objeto y luego imputarlo con la función [*replace_na*.](https://www.rdocumentation.org/packages/tidyr/versions/0.8.3/topics/replace_na) Dicha función debe recibir una lista que indique qué imputar a cada variable. Si queremos hacerlo con una sola, se especifica la variable, sino, se van agregando con comas.
+
+```{r}
+mean_revenue <- round(mean(datos$revenue, na.rm = TRUE),0)
+datos %>% replace_na(list(revenue = mean_revenue)) %>% head()
+```
+
+Si quisiéramos reemplazar todos los NAs de los datos numéricos por un 0, realmente específicar este valor para cada variable puede resultar tedioso. Por tanto, podemos usar un método para modificar todas las columnas numéricas de una vez, tal como se explica en los comentarios del siguiente código.
+
+Pasos:
+
+1.  Selecciono la tabla con que voy a trabajar
+2.  Esta función es como "select" pero con condiciones. En este caso le pido que se quede con las columnas solo si son numéricas.
+3.  Uso la función replace y no replace_na, ya que la segunda siempre recibe una lista, y ésta es más directa. Tengo que indicarle una condición y luego el valor con qué reemplazar.
+4.  Finalmente, vuelvo a pegarle las variables que le quité. Puedo usar select_if nuevamente pero esta vez con la condición negativa.
+
+```{r}
+datos %>% # Paso 1
+  select_if(is.numeric) %>% # Paso 2
+  replace(is.na(.),0) %>% # Paso 3
+  cbind(select_if(datos, negate(is.numeric))) %>% # Paso 4
+  filter(id == 31)
+```
+
+Esto podemos aplicarlo con las variables categóricas también, por ejemplo, si queremos que los NAs sean "sin dato" o de algún valor que nos interese. Para esto vamos a necesitar un paquete para el tratamiento de valores de factores, llamada [*forcats*](https://www.rdocumentation.org/packages/forcats/versions/0.4.0). Este paquete tiene una función dedicada expresamente para sustituir los NAs por otro valor, el truco es reemplazar las variable existente con la nueva generada a través de *mutate.* Si en vez de factores, trabajáramos con caracteres, la función *replace* debería ser suficiente.
+
+```{r}
+library(forcats)
+datos %>% 
+  mutate(
+  date = fct_explicit_na(date, "1/1/1900"),
+  product = fct_explicit_na(product, "sinDato"),
+  city = fct_explicit_na(city, "Otro"),
+  product_type = fct_explicit_na(product_type, "Otro") ) %>% 
+  head()
+```
+
+## Manejo de duplicados
+
+Los duplicados también suelen ser vistos como errores en los datos, pero tal como se aclara en la cita de más arriba, debe tenerse en cuenta el contenido conceptual de cada dataset para dirimir qué hacer con estos casos.
+
+Los duplicados pueden no serlo de forma absoluta, puede ocurrir que haya duplicados parciales, es decir que se encuentren una serie de variables con el mismo elemento pero en otras no. Dependerá de cada caso si se eliminan, agrupan, o dejan tal cual están.
+
+Para quedarnos con los valores únicos de un dataset, debemos usar la función [*distinct*](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/distinct)*.* A esta función se le indica a partir de cuáles variables debe buscar que haya combinaciones únicas. Si no se le presentan argumentos, considera a todas las variables.
+
+```{r}
+datos %>% 
+  nrow(.)
+
+datos %>% 
+  distinct() %>% 
+  nrow(.)
+```
+
+Ambos resultados dan mil casos, por tanto, se puede concluir que el dataset no tiene duplicados si tomamos en cuenta todas sus variables. Pero si se toman algunas esto empieza a ocurrir.
+
+Como puede apreciarse en los cuadros inferiores, si nos quedamos con menos variables, el distinct nos devuelve la cantidad de combinaciones únicas de éstas. También vemos que el uso del distinct indicándole cuáles variable son de interés, nos hace llegar al mismo objetivo.
+
+```{r}
+datos %>%
+  select(city, product_type) %>% 
+  nrow(.)
+
+datos %>% 
+  select(city, product_type) %>% 
+  distinct() %>% 
+  nrow(.)
+
+datos %>% 
+  distinct(city, product_type) %>% 
+  nrow(.)
+  
+```
+
+Por defecto al indicarle cuáles variables nos interesa obtener los valores únicos, el *distinct* elimina el resto, pero podemos evitar esto si le agregamos el parámetro *keep_all.* Debe tenerse presente que *distinct* solo se quedará con el primer registro. Si nuestra intención es que esto sea diferente, debemos ordenar el dataframe de la forma en que elimine los registros que nosotros querramos.
+
+```{r}
+datos %>% 
+  distinct(city, product_type) %>% 
+  head()
+
+datos %>% 
+  distinct(city, product_type, .keep_all = TRUE) %>% 
+  head()
+```
+
+## Manejo de fechas
+
+### Tipo de dato fecha
+
+Así como los factores y los caracteres tienen sus particularidades, suelen dar menos problemas que las fechas, las cuales están condicionadas por formatos. Para manejar este tipo de dato, el paquete más usado se llama [*lubridate*](https://www.rdocumentation.org/packages/lubridate/versions/1.8.0)*.*
+
+Muchas veces R interpreta las fechas como textos en la medida que el formato no es el mismo que el estandarizado (AAAA-MM-DD). Cuando esto ocurre, debemos transformar la variable con, por ejemplo, una función de lubridate que transforma una variable en fecha, asignándole a cada valor de la fecha el del orden de la función.
+
+En este caso usaremos *dmy* ya que en nuestra variable el formato es DD/MM/YYYY. Si fuera, por ejemplo, MM-DD-AAAA, podríamos usar *mdy* (no es relevante el simbolo que separe a los elementos de la fecha). Hay también funciones que contienen horas, minutos y segundos.
+
+```{r}
+library(lubridate)
+datos %>% str(.)
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  str(.)
+```
+
+### Generación de variables de fechas
+
+También podemos generar variables a partir de fechas, por ejemplo podemos obtener el año, mes y día de la semana a partir de una fecha dada. También, podemos imputar una fecha en específico, por ejemplo, la de hoy.
+
+```{r}
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(
+    anio = year(date),
+    mes = month(date),
+    dia_semana = wday(date, label = TRUE),
+    hoy = today()
+  ) %>% 
+  head()
+```
+
+Otro valor que traen las fechas es la generación de variables calculadas a partir de fechas. Es muy común querer obtener el tiempo transcurrido entre una fecha y otra. En el siguiente ejemplo se presenta cómo encontrar la diferencia en días, meses y años. Es básicamente la división entre la cantidad de días (unidad de medida de lubridate) por el segmentador que nos interesa. El uso de los % es para que redondee.
+
+```{r}
+datos %>% 
+  select(id, date) %>% 
+  mutate(date = dmy(date), hoy = today()) %>%
+  mutate(
+    anios_dif = interval(date, hoy) %/% years(1),
+    meses_dif = interval(date, hoy) %/% months(1),
+    dias_dif = interval(date, hoy) %/% days(1),
+    un_anio_mas = date + years(1),
+    un_mes_mas = date + months(1),
+    un_dia_mas = date + 1
+  ) %>% 
+  head()
+```
+
+## Desafío
+
+1.  Genere una tabla que muestre el total de productos vendidos, y el total revenue por año y mes. Elimine los casos en donde haya valores faltantes.
+
+2.  ¿Cuáles han sido, para cada año, los cinco productos menos vendidos? ¿Y los menos rentables?
+
+    1.  ¿Cuántos días han pasado desde que se vendieron estos productos con respecto a la última fecha registrada?
+
+3.  Investigue si se vende más caro en la primera mitad del año o en la segunda, averiguando el promedio de venta por unidad. Convierta los valores faltantes del mes en enero.
+
+```{r, eval =FALSE}
+#| code-fold: true
+#| code-summary: "Posible solución"
+
+# Ejercicio 1
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(anio = year(date), mes = month(date)) %>% 
+  drop_na(any_of(c("anio", "mes"))) %>% 
+  group_by(anio, mes) %>% 
+  summarise(cantidad = n(), total_ingreso = sum(revenue, na.rm = TRUE))
+
+# Ejercico 2
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(anio = year(date)) %>% 
+  drop_na(any_of(c("anio", "product"))) %>% 
+  group_by(anio, product) %>% 
+  summarise(cantidad = n(), total_ingreso = sum(revenue, na.rm = TRUE)) %>%   arrange(cantidad) %>% 
+  head(5)
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(anio = year(date)) %>% 
+  drop_na(any_of(c("anio", "product"))) %>% 
+  group_by(anio, product) %>% 
+  summarise(cantidad = n(), total_ingreso = sum(revenue, na.rm = TRUE)) %>%   arrange(total_ingreso) %>% 
+  head(5)
+
+# Ejercicio 2 parte b
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(anio = year(date)) %>% 
+  drop_na(any_of(c("anio", "product"))) %>% 
+  group_by(anio, product) %>% 
+  summarise(cantidad = n(), total_ingreso = sum(revenue, na.rm = TRUE)) %>% 
+  arrange(total_ingreso) %>% 
+  head(1) %>% 
+  select(product) %>% 
+  left_join(datos, by = 'product') %>% 
+  mutate(date = dmy(date), hoy = today()) %>% 
+  arrange(desc(date)) %>% 
+  mutate(dias_desde_que_se_vendio = interval(date, hoy) %/% days(1)) %>% 
+  select(product, dias_desde_que_se_vendio) %>% 
+  head()
+
+# Ejercicio 3
+
+datos %>% 
+  mutate(date = dmy(date)) %>% 
+  mutate(mes = month(date)) %>%
+  replace_na(list(mes = 1)) %>% 
+  mutate(
+    parte_del_anio = case_when(
+      mes < 7 ~ "Primera parte",
+      mes > 6 ~ "Segunda parte"
+    )
+  ) %>% 
+  group_by(parte_del_anio) %>% 
+  summarise(cantidad = n(), total_ingreso = sum(revenue, na.rm = TRUE)) %>%
+  mutate(promedio_venta = total_ingreso/cantidad)
+```

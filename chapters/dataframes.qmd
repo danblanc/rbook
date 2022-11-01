@@ -1,0 +1,161 @@
+---
+title: "Estructura de data frames"
+author: "Daniel Blanc"
+format: 
+  html:
+    #self-contained: true
+    toc: true
+    theme: united  
+    toc-title: Contenido
+editor: visual
+echo: true
+---
+
+## Características básicas de un dataset
+
+En el laboratorio anterior se vio cómo obtener los datos proveenientes de distintos tipos de archivos. En esa tarea uno conoce el formato y estructura básica de un dataset, mas a partir de ahora es necesario concentrarse en los componentes estadísticos del dataset.
+
+### Tipos de datos en R
+
+Cuando almacenamos una tabla, esta se convierte en un data frame, que es un objeto de R pensado para almacenar información. Podemos encontrar el tipo de objeto de cualquier elemento en R utilizando la función *class*.
+
+Esto ocurre también para los vectores, los cuales adquieren un tipo de dato. Los tipos de dato más habituales son los character, las números y los factores. Los factores son un método de guardado de R que sirve para incorporar valores categóricos que se repiten mucho, por ejemplo el sexo, mientras que no es tan útil para los nombres.
+
+```{r}
+nombres <- c('Daniel', 'Nicolás', 'Andrea')
+class(nombres)
+```
+
+```{r}
+edades <- c(30,42,28)
+class(edades)
+```
+
+Estos tipos de datos son los que tendrán las columnas de nuestros dataframes. Los dataframes están compuestos por una serie de vectores de similar longitud.
+
+```{r}
+df <- data.frame(nombres, edades)
+df
+```
+
+Un dataframe se muestra con un número de fila incremental a la izquierda, mientras que toma el nombre de los vectores como encabezados para las columnas, y los valores de los mismos como el contenido.
+
+```{r}
+class(df)
+```
+
+### Seleccionando en el dataset
+
+Al considerar un dataframe, debe verse como un elemento de dos entradas: filas y columnas. Si el objetivo es acceder a un determinado valor, se deben dar instrucciones de cómo llegar al dato. Por ejemplo, si se quiere acceder a la edad de Nicolás, debemos indicarle en qué fila y columna se encuentra.
+
+```{r}
+df[2,2]
+```
+
+Para especificar esta cuestión, es necesario abrir paréntesis rectos luego del nombre de la tabla, y específicar el número de fila previo a la coma, y el número de columna posterior a la coma.
+
+Si quisiéramos obtener más información, podemos incorporar varias filas o columnas, ya sea seleccionándolas manualmente o si están de corrido, utilizar un slicing.
+
+```{r}
+df[2,c(1,2)]
+```
+
+```{r}
+df[2,1:2]
+```
+
+Cuando se trae más información, se despliegan los nombres de las columnas y el número de fila. Estos métodos se pueden utilizar para filtrar un dataset, mas no es el método más conveniente en general.
+
+```{r}
+df2 <- df[1:2,1:2]
+df2
+```
+
+Resulta más conveniente brindar una condición por la cual filtrar el dataset, ya que esto no varía luego según la cantidad de filas u otros cambios. Se verá este tipo de cuestión con un dataset de ejemplo.
+
+## Explorando un dataset
+
+Lo primero que debemos hacer es obtener un dataset. Siempre es conveniente ver las primeras filas de la tabla para ver en qué formato llegaron. Esto puede hacerse con la función *head.*
+
+```{r}
+library(openxlsx)
+data <- read.xlsx(
+  xlsxFile = "../data/ACV EFMA 2022.xlsx",
+  detectDates = TRUE
+)
+head(data)
+```
+
+La función clásica para comprender el estructura de un dataset, es justamente *str*. Esto nos permite ver el tipo de dato de cada variable, junto con la cantidad de variables y observaciones.
+
+```{r}
+str(data)
+```
+
+Este dataset tiene una sola variable numérica, junto a tres variables de texto y dos de fecha. Si tuvieramos más variables numéricas podríamos usar la función *summary,* que sirve para brindar una serie de elementos estadísticos sobre las variables. Usaremos un dataset nativo de R llamado Iris para poder aplicarlo.
+
+```{r}
+iris <- iris
+head(iris)
+```
+
+```{r}
+summary(iris)
+```
+
+Como puede apreciarse, el *summary* trae información estadística de las variables numéricas, e ignora a las de otro tipo de dato. Este tipo de funciones son muy útiles para comprobar que el dataset se importó correctamente y que las variables tienen el valor deseado. Por lo general una cuestión que esto revela es si el indicador de decimal es el correcto, por definición R considera el "." como separador decimal, pero en el idioma español se utiliza por lo general la ",".
+
+Volviendo a nuestro dataset, en caso de querer conocer, por ejemplo, la frecuencia de valores de una variable categórica, se puede usar la función *table.* Para indicarle a R que queremos acceder a una columna del dataframe, debemos utilizar el \$ antes del nombre de la columna.
+
+```{r}
+table(data$Sexo)
+```
+
+También se puede acceder a la cantidad relativa.
+
+```{r}
+prop.table(table(data$Sexo))
+```
+
+Se puede hacer esto combinando las variables
+
+```{r}
+table(data$Sexo, data$Trombolisis.medicamentosa)
+```
+
+```{r}
+prop.table(
+  table(
+    data$Sexo,
+    data$Trombolisis.medicamentosa
+  ),
+  margin = 2
+)
+```
+
+```{r}
+prop.table(
+  table(
+    data$Sexo,
+    data$Trombolisis.medicamentosa
+  ),
+  margin = 1
+)
+```
+
+### Modificación de tipos de datos
+
+Las columnas de los dataset tienen tipos de datos asignados, pero estos pueden ser modificables, siempre y cuando sea coherente. Por ejemplo, podemos almacenar un "2" como un texto, pero no almacenar un "hola" como un número. Para transformar los tipos de datos podemos utilizar varios métodos, uno como ya vimos es hacerlo durante la importación, otro es usando las funciones *as.type*
+
+```{r}
+data$Sexo <- as.factor(data$Sexo)
+data$Trombolisis.medicamentosa <- as.factor(data$Trombolisis.medicamentosa)
+data$Institucion <- as.factor(data$Institucion)
+data$Codigo <- as.character(data$Codigo)
+```
+
+¿Se acuerdan de *summary?* Con los factores funciona también.
+
+```{r}
+summary(data)
+```
