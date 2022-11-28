@@ -13,13 +13,13 @@ echo: true
 
 ## Características básicas de un dataset
 
-En el laboratorio anterior se vio cómo obtener los datos proveenientes de distintos tipos de archivos. En esa tarea uno conoce el formato y estructura básica de un dataset, mas a partir de ahora es necesario concentrarse en los componentes estadísticos del dataset.
+En el laboratorio anterior se vio cómo obtener los datos proveenientes de distintos tipos de archivos. En esa tarea uno conoce el formato y estructura básica de un dataset, mas a partir de ahora es necesario concentrarse en los componentes estadísticos del mismo.
 
 ### Tipos de datos en R
 
-Cuando almacenamos una tabla, esta se convierte en un data frame, que es un objeto de R pensado para almacenar información. Podemos encontrar el tipo de objeto de cualquier elemento en R utilizando la función *class*.
+Cuando almacenamos una tabla, se convierte en un data frame, que es un objeto de R pensado para almacenar información estructurada como una tabla. Podemos encontrar el tipo de objeto de cualquier elemento en R utilizando la función *class*.
 
-Esto ocurre también para los vectores, los cuales adquieren un tipo de dato. Los tipos de dato más habituales son los character, las números y los factores. Los factores son un método de guardado de R que sirve para incorporar valores categóricos que se repiten mucho, por ejemplo el sexo, mientras que no es tan útil para los nombres.
+Esto ocurre también para los vectores, los cuales adquieren un tipo de dato. Los tipos de dato más habituales son los caracteres, las números y los factores. Los factores son un método de guardado de R que sirve para incorporar valores categóricos que se repiten mucho, por ejemplo el sexo, mientras que no es tan útil para los nombres.
 
 ```{r}
 nombres <- c('Daniel', 'Nicolás', 'Andrea')
@@ -54,7 +54,7 @@ df[2,2]
 
 Para especificar esta cuestión, es necesario abrir paréntesis rectos luego del nombre de la tabla, y específicar el número de fila previo a la coma, y el número de columna posterior a la coma.
 
-Si quisiéramos obtener más información, podemos incorporar varias filas o columnas, ya sea seleccionándolas manualmente o si están de corrido, utilizar un slicing.
+Si quisiéramos obtener más información, podemos incorporar varias filas o columnas, ya sea seleccionándolas manualmente o si están de corrido, utilizar un *slicing*.
 
 ```{r}
 df[2,c(1,2)]
@@ -80,7 +80,7 @@ Lo primero que debemos hacer es obtener un dataset. Siempre es conveniente ver l
 ```{r}
 library(openxlsx)
 data <- read.xlsx(
-  xlsxFile = "../data/ACV EFMA 2022.xlsx",
+  xlsxFile = "../data/Chapter_3/data_c_1.xlsx",
   detectDates = TRUE
 )
 head(data)
@@ -108,26 +108,26 @@ Como puede apreciarse, el *summary* trae información estadística de las variab
 Volviendo a nuestro dataset, en caso de querer conocer, por ejemplo, la frecuencia de valores de una variable categórica, se puede usar la función *table.* Para indicarle a R que queremos acceder a una columna del dataframe, debemos utilizar el \$ antes del nombre de la columna.
 
 ```{r}
-table(data$Sexo)
+table(data$sexo)
 ```
 
 También se puede acceder a la cantidad relativa.
 
 ```{r}
-prop.table(table(data$Sexo))
+prop.table(table(data$sexo))
 ```
 
 Se puede hacer esto combinando las variables
 
 ```{r}
-table(data$Sexo, data$Trombolisis.medicamentosa)
+table(data$sexo, data$consume.medicamento)
 ```
 
 ```{r}
 prop.table(
   table(
-    data$Sexo,
-    data$Trombolisis.medicamentosa
+    data$sexo,
+    data$consume.medicamento
   ),
   margin = 2
 )
@@ -136,8 +136,8 @@ prop.table(
 ```{r}
 prop.table(
   table(
-    data$Sexo,
-    data$Trombolisis.medicamentosa
+    data$sexo,
+    data$consume.medicamento
   ),
   margin = 1
 )
@@ -148,10 +148,8 @@ prop.table(
 Las columnas de los dataset tienen tipos de datos asignados, pero estos pueden ser modificables, siempre y cuando sea coherente. Por ejemplo, podemos almacenar un "2" como un texto, pero no almacenar un "hola" como un número. Para transformar los tipos de datos podemos utilizar varios métodos, uno como ya vimos es hacerlo durante la importación, otro es usando las funciones *as.type*
 
 ```{r}
-data$Sexo <- as.factor(data$Sexo)
-data$Trombolisis.medicamentosa <- as.factor(data$Trombolisis.medicamentosa)
-data$Institucion <- as.factor(data$Institucion)
-data$Codigo <- as.character(data$Codigo)
+data$sexo <- as.factor(data$sexo)
+data$empresa_farmaceutica <- as.factor(data$empresa_farmaceutica)
 ```
 
 ¿Se acuerdan de *summary?* Con los factores funciona también.

@@ -32,7 +32,7 @@ iris %>%
   ggplot()
 ```
 
-Para poder visualizar lo que hay dentro, debemos dentro de la función *ggplot* delinear el eje x e y (este último es opcional). Por ejemplo, podemos querer generar un gráfico que muestre en barras la cantidad de casos por especie. Para empezar, podemos definir el eje x con las especies.
+Para poder visualizar lo que hay dentro, debemos dentro de la función *ggplot* delinear el eje x e y (este último es opcional). Por ejemplo, podemos querer generar un gráfico que muestre en barras la cantidad de casos por especie. Para empezar, podemos definir el eje x con las especies, mediante la función *aes*.
 
 ```{r}
 iris %>% 
@@ -60,7 +60,7 @@ iris %>%
   )
 ```
 
-También pueden agregarse otros elementos estéticos al gráfico, como las etiquetas de datos y los colores de las gráficas.
+También pueden agregarse otros elementos estéticos al gráfico, como las etiquetas de datos y los colores de las gráficas. Con respecto a las etiquetas, con la función *geom_text* suele bastar con agregar *label = variable_en_eje_y* pero como en éste caso no hay, es un poco más complejo. El parámetro *just* varía según si es vertical u horizontal, y refiere a la ubicación. Si cambiamos el valor, cambia donde queda la etiqueta.
 
 ```{r}
 iris %>% 
@@ -74,7 +74,7 @@ iris %>%
   geom_text(aes(label = ..count..), stat = "count", vjust = -0.5)
 ```
 
-Finalmente, pueden seleccionarse temas dentro de ggplot que permiten una mejora visual de todos los elementos del gráfico.
+Finalmente, pueden seleccionarse temas dentro de ggplot que permiten una mejora visual de todos los elementos del gráfico. Hay muchos para elegir y pueden aportar mucho en términos de visualización.
 
 ```{r}
 iris %>% 
@@ -109,7 +109,7 @@ iris %>%
   theme_bw()
 ```
 
-Cuando queremos gráficar ciertos datos, conviene previamente armar una tabla que permita simplemente representar los resultados. Si bien ggplot puede elaborarse a partir de cálculos con el dataset entero, conviene dejarle los números dados.
+Cuando queremos graficar ciertos datos, conviene previamente armar una tabla que permita simplemente representar los resultados. Si bien ggplot puede elaborarse a partir de cálculos con el dataset entero, conviene dejarle los números dados.
 
 ```{r}
 iris %>% 
@@ -128,6 +128,10 @@ iris %>%
 
 ### Barras acumuladas
 
+Las barras acumuladas implican tener que pasarle una variable a *ggplot* para que acumule. Si realizamos un *summarise,* éste naturalmente nos devolvera una columna por cada cálculo. Tenemos que adaptarlo a las necesidades de *ggplot* mediante la función [*gather*](https://www.rdocumentation.org/packages/tidyr/versions/0.5.1/topics/gather)*,* que sirve para hacer un **despivotamiento de columnas**.
+
+Un despivotamiento de columnas es básicamente pasar una serie de columnas a tan solo dos: una que sea el concepto y otra el valor, y duplicar filas para no perder información.
+
 ```{r}
 iris %>% 
   group_by(Species) %>% 
@@ -140,6 +144,8 @@ iris %>%
   geom_bar(stat = 'identity') +
   theme_bw()
 ```
+
+Este método se debe usar tanto para acumulación de barras como al usarlas en posición *dodge.*
 
 ```{r}
 iris %>% 
@@ -154,7 +160,9 @@ iris %>%
   theme_bw()
 ```
 
-Gráficos de dispersión
+### Gráficos de dispersión
+
+Los gráficos de dispersión son básicos en cualquier análisis cuantitativo. Se pueden generar fácilmente con *ggplot* y además agregar variables categóricas para segmentar. Finalmente la función que se utiliza es *geom_point().*
 
 ```{r}
 iris %>% 
@@ -165,6 +173,8 @@ iris %>%
 
 ### Histogramas
 
+Para realizar tanto histogramas como boxplot, es camino es bastante directo.
+
 ```{r}
 iris %>% 
   ggplot(aes(x = Sepal.Length)) +
@@ -173,6 +183,8 @@ iris %>%
 ```
 
 ### Boxplot
+
+Si bien la estructura de ggplot es sencilla, es muy personalizable de acuerdo a lo que necesite el analista.
 
 ```{r}
 iris %>% 
@@ -199,7 +211,7 @@ Obtenga el dataset "datos_ventas" y realice las siguientes operaciones:
 #| code-fold: true
 #| code-summary: "Posible solución"
 library(openxlsx)
-ventas <- read.xlsx("data_ventas.xlsx", detectDates = TRUE)
+ventas <- read.xlsx("../data/Chapter_6/data_c_1.xlsx", detectDates = TRUE)
 
 # Primer ejercicio
 

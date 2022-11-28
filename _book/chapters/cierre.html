@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.0.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,15 +11,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 </style>
 
 
@@ -114,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/data_analisis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos con R</span></a>
+  <a href="../chapters/data_analisis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -137,7 +132,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#qué-más-hay-para-mi" id="toc-qué-más-hay-para-mi" class="nav-link active" data-scroll-target="#qué-más-hay-para-mi"> <span class="header-section-number">7.1</span> Qué más hay para mi?</a></li>
+  <li><a href="#a-veces-necesitamos-ayuda" id="toc-a-veces-necesitamos-ayuda" class="nav-link" data-scroll-target="#a-veces-necesitamos-ayuda"> <span class="header-section-number">7.2</span> A veces necesitamos ayuda</a></li>
+  <li><a href="#desafío" id="toc-desafío" class="nav-link" data-scroll-target="#desafío"> <span class="header-section-number">7.3</span> Desafío</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -158,8 +161,31 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="qué-más-hay-para-mi" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="qué-más-hay-para-mi"><span class="header-section-number">7.1</span> Qué más hay para mi?</h2>
+<p>El camino de los datos es largo y amplio.</p>
+<p>Manejar una herramienta como R para el análisis descriptivo es una habilidad relevante, y conviene ponerla en práctica en base a proyectos. La mejor forma de practicar el uso de una herramienta como R es proponerse solucionar un problema basado en datos, y hacerlo enteramente dentro de la herramienta RStudio.</p>
+<p>Muchas veces necesitamos realizar análisis para generar un informe de situación. Podemos realizar el informe enteramente en R y generar un documento PDF, HTML, o Word mediante el uso de <a href="https://quarto.org/">Quarto</a>. Esto es un framework que permite generar documentos dentro de RStudio y que funciona con otros lenguajes además de R, como Python o Julia. Creando un documento en RStudio podemos insertar las tablas o gráficas que querramos juntos con el texto descriptivo del informe, sin necesidad de pasar de una herramienta a otra.</p>
+<p>En otras ocasiones resulta necesario generar un dashboard dinámico que presente determinada información. Para ello es conveniente usar el framework <a href="https://shiny.rstudio.com/">Shiny</a>, que permite construir tableros interactivos para el usuario dentro de RStudio. Además, se puede posteriormente publicar dentro de una página web para el posterior uso de los usuarios finales. Nada tiene que envidiarle a herramientas como Power BI o Tableau.</p>
+</section>
+<section id="a-veces-necesitamos-ayuda" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="a-veces-necesitamos-ayuda"><span class="header-section-number">7.2</span> A veces necesitamos ayuda</h2>
+<p>Sin dudas que con un libro o un curso es difícil decir que uno esté capacitado para llevar adelante de forma independiente un proyecto de análisis de datos con R o cualquier herramienta. Es conveniente que dicha tarea sea un trabajo colectivo, y en muchos casos, mentoreado.</p>
+<p>Si sientes que tu o tu organización podrían usar una mano para llevar adelante un proyecto de datos con R, no dudes en contactarme.</p>
+</section>
+<section id="desafío" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="desafío"><span class="header-section-number">7.3</span> Desafío</h2>
+<p>Ahora el desafío es tuyo.</p>
+<ol type="1">
+<li>Toma un proyecto basado en datos y ponte a resolverlo con R y RStudio</li>
+<li>Estudia si dicho proyecto podría beneficiarse de herramientas como Quarto o Shiny, y apréndelas si es necesario.</li>
+<li>Pide ayuda o mentoría si crees que el proyecto lo requiere</li>
+</ol>
+<p>Si este libro te ayudó en tu camino, me encantaría que algún día me lo mencionaras.</p>
+<p>Hasta entonces, ¡éxitos en tu carrera, data analyst!</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -231,8 +257,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

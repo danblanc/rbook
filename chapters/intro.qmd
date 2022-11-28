@@ -58,7 +58,7 @@ Finalmente, se ve a los objetos interactuar entre ellos. El resultado podría ha
 nuevo_objeto_suma - resultado_suma
 ```
 
-## RStudio (pronto POSIT)
+## RStudio
 
 Programar vinculándose tan solo con la consola puede ser un poco contra intuitivo. Felizmente hay herramientas que permiten hacerle la vida más fácil al analista. En R, sin dudas la más popular es [RStudio](https://www.rstudio.com/).
 
@@ -66,13 +66,13 @@ RStudio es el IDE principal de R. Un [IDE](https://en.wikipedia.org/wiki/Integra
 
 Algunos IDE sirven para un lenguaje de programación específico, y otros aceptan varios. El más famoso es [VSCode](https://code.visualstudio.com/), de Microsoft, en donde también se puede usar R, pero no es tan popular dentro de la comunidad. RStudio admite varios lenguajes de programación además de R, entre ellos Python, JavaScript y Julia.
 
-Finalmente, RStudio se está convirtiendo en [posit](https://posit.co/).
+Finalmente, la marca RStudio se está convirtiendo en [Posit](https://posit.co/).
 
 ![](images/rstudio2_gy2jzi.webp){fig-align="center"}
 
 RStudio tiene cuatro grandes secciones, tal como se muestra en la imagen previa. A continuación se detallarán:
 
--   **Script:** es el editor de texto dentro de RStudio, es donde se escriben los comandos que luego se enviarán a la consola para su ejecución. Permite al analista mantener ordenado y documentado todo lo que ha hecho en R y puede guardarse para luego o enviarse como cualquier documento. Es el principal socio del analista y puede trabajarse con varios a la vez. Por lo general, cuando abrimos RStudio no aparece, se debe abrir uno nuevo.
+-   **Script:** es el editor de texto dentro de RStudio, es donde se escriben los comandos que luego se enviarán a la consola para su ejecución. Permite al analista mantener ordenado y documentado todo lo que ha hecho en R y puede guardarse para luego o enviarse como cualquier documento. Es el principal socio del analista y puede trabajarse con varios a la vez. Por lo general, cuando abrimos RStudio no aparece, se debe crear uno nuevo.
 
 -   **Consola:** es donde R efectivamente trabaja y ejecuta los comandos que se le van enviando. Vendría a ser lo utilizado en el módulo anterior insertado dentro de una herramienta que permite más funciones.
 
@@ -82,7 +82,7 @@ RStudio tiene cuatro grandes secciones, tal como se muestra en la imagen previa.
 
 ## Funciones
 
-En R se programa. Aprender a programar es un proceso de largo aliento, no es como una suite de bussines analytics como Power BI.[^intro-2] Puede llevar meses sentirse a gusto con la programación. Lo fundamental es la práctica. Felizmente, no necesitamos ser expertos en programación para realizar análisis de datos.
+En R se programa. Aprender a programar es un proceso de largo aliento, no es como aprender a usar una suite de bussines analytics como Power BI.[^intro-2] Puede llevar meses sentirse a gusto con la programación. Lo fundamental es la práctica. Felizmente, no necesitamos ser expertos en programación para realizar análisis de datos, sino que tan solo tenemos que saber usar las librerías y funciones adecuadas.
 
 [^intro-2]: Ver artículo: [La santa trinidad del análisis de datos](https://www.linkedin.com/pulse/la-santa-trinidad-del-an%25C3%25A1lisis-de-datos-daniel-blanc/?trackingId=gthGpbnJTJWapZz79uRNlQ%3D%3D)
 
@@ -94,19 +94,21 @@ Una función es un bloque de código que permite que realice determinada acción
 
 ```{r}
 mi_funcion <- function() { 
-  print("Hola chiques!")
+  print("Hola mundo!")
 }
 ```
 
-## BOOM!
+En el script anterior, definí una función llamada "mi_funcion", que utiliza a su vez otra función ya definida por R llamada *print* que sirve para publicar texto en la consola. Esta función lo único que hace es que al activarla, aparece el texto que está entre comillas en la consola. Si yo le cambio ese texto y vuelvo a definir la función, cambiará el resultado.
 
 ```{r}
 mi_funcion()
 ```
 
+En este ejemplo claramente no se ven las funciones como algo que ayude mucho, pero obviamente para realizar análisis de datos se utilizan unas mucho más sofisticadas, desarrolladas por especialistas. Nosotros como analistas podemos crear las nuestras, pero seguramente sea necesario bajo determinados contextos. Lo ideal es conocer cómo funcionan. Otro elemento central en las funciones son los parámetros.
+
 ## Parámetros
 
-Los parámetros son valores que se sustituirán por aquellos que necesitemos al llamar a la función.
+Los parámetros son valores que se sustituirán por aquellos que necesitemos al llamar a la función. Sirven para generar funciones que se adapten a cambios en las necesidades del analista. En este caso, se crea una función *nombre_completo* que recibe dos parámetros: *nombre* y *apellido.* Luego, con otra función de R llamada *paste* que lo hace es transformar lo que tiene adentro a texto y unirlo, une los dos valores que ingresé cómo parámetros y los muestra en consola.
 
 ```{r}
 nombre_completo <- function(nombre, apellido) {
@@ -114,13 +116,24 @@ nombre_completo <- function(nombre, apellido) {
 }
 ```
 
-Suelen tener nombres que explicitan lo que hacen.
+Las funciones suelen tener nombres que explicitan lo que hacen.
 
 ```{r}
 nombre_completo("Homero", "Simpson")
 ```
 
-## Tuya Héctor!
+Si hubiéramos usado parámetros en nuestra función anterior:
+
+```{r}
+mi_funcion_con_params <- function(texto) { 
+  print(texto)
+}
+
+mi_funcion_con_params("Hola, Mundo!")
+mi_funcion_con_params("Hola, Universo!")
+```
+
+## Desafío
 
 Ahora les toca a ustedes:
 
@@ -137,8 +150,6 @@ Cree una función que tome tres valores:
 -   Debe realizar la operación solicitada y devolver el valor
 
 -   Conviene googlear sobre condicionales en R ;)
-
-## Posibles soluciones
 
 ```{r}
 #| code-fold: true

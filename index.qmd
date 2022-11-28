@@ -6,7 +6,7 @@ El objetivo de este ebook es brindarle al lector una introducción amigable pero
 
 También puede ser de utilidad para quien tenga experiencia, en la medida que cada tanto es de utilidad repasar los conceptos fundamentales, especialmente si hace tiempo que no realizamos determinada tarea, o si nunca se tuvo la necesidad de encarar determinado proyecto, por ejemplo, una Shiny App.
 
-El libro se divide en X capítulos:
+El libro se divide en 7 capítulos:
 
 1.  Introducción a R, funciones y RStudio
 
@@ -20,9 +20,7 @@ El libro se divide en X capítulos:
 
 6.  Visualización
 
-7.  Informes interactivos y automatizados
-
-8.  Dashboards interactivos
+7.  Próximos pasos
 
 ## Sobre mi
 

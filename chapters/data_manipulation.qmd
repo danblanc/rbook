@@ -23,12 +23,12 @@ Anexar dos tablas implica "poner una encima de la otra", es decir, que las filas
 Para ejemplificar estos casos vamos a trabajar con una serie de tablas ficticias, que responden a los datos de un restaurant imaginario. Lo primero que importaremos son las tablas de ventas de la semana uno y la semana dos.
 
 ```{r}
-semana_1 <- read.csv("../data/Restaurant - Week 1 Sales.csv")
+semana_1 <- read.csv("../data/Chapter_5/Restaurant - Week 1 Sales.csv")
 head(semana_1)
 ```
 
 ```{r}
-semana_2 <- read.csv("../data/Restaurant - Week 2 Sales.csv")
+semana_2 <- read.csv("../data/Chapter_5/Restaurant - Week 2 Sales.csv")
 head(semana_2)
 ```
 
@@ -43,7 +43,7 @@ De esta forma, obtenemos un dataframe de 500 filas y la misma cantidad de column
 
 ### Combinación de tablas
 
-Otra clásica necesidad que se presenta a la hora de trabajar con muchas tablas es el tener combinarlas. Las combinaciones suceden mediante reglas de unión: a través de una determinada clave, cuando estas coinciden entre dos tablas, se pegan las columnas. Los tipos de unión son los siguientes:
+Otra clásica necesidad que se presenta a la hora de trabajar con muchas tablas es el tener que combinarlas. Las combinaciones suceden mediante reglas de unión: a través de una determinada clave, cuando estas coinciden entre dos tablas, se pegan las columnas. Los tipos de unión son los siguientes:
 
 ![](images/joins.webp){fig-align="center"}
 
@@ -58,7 +58,7 @@ Otra clásica necesidad que se presenta a la hora de trabajar con muchas tablas 
 Tidyverse tiene funciones específicas para realizar estas uniones. Comencemos importando las tablas a combinar. La tabla de comidas tiene información sobre el id de cada comida del menú, junto con el nombre del item y su precio.
 
 ```{r}
-comida <- read.csv("../data/Restaurant - Foods.csv")
+comida <- read.csv("../data/Chapter_5/Restaurant - Foods.csv")
 head(comida)
 ```
 
@@ -73,7 +73,7 @@ head(union)
 Para cada Food.ID, la unión trajo el resto de las columnas de la tabla de comida que coincidiera. Para el caso de los clientes tenemos un problema, y es que la columna por la cual se hará la unión no es similar en ambas tablas. Mientras que en *ventas* la variable se llama Costumer.ID, en *clientes* se llama ID. Por tanto, tengo que adaptar mi función de combinación, aclarando cómo se llama cada variable en cada tabla.
 
 ```{r}
-clientes <- read.csv("../data/Restaurant - Customers.csv")
+clientes <- read.csv("../data/Chapter_5/Restaurant - Customers.csv")
 head(clientes)
 ```
 
@@ -86,7 +86,7 @@ head(union)
 
 De esta forma, obtenemos la tabla final, en donde pueden realizar análisis.
 
-### Desafío
+### Mini Desafío
 
 1.  Obtenga las cinco comidas que más se consumen.
 
@@ -124,7 +124,7 @@ Los datos faltantes son una realidad cotidiana dentro del análisis de datos. To
 Estos *missing* pueden aparecer de varias formas: celdas vacías, textos vacíos, o elementos que identifiquen que un dato es faltante, por ejemplo, un texto que diga "sin dato".
 
 ```{r}
-datos <- read.csv("../data/extras.csv", encoding = "UTF-8")
+datos <- read.csv("../data/Chapter_5/data_c_1.csv", encoding = "UTF-8")
 head(datos)
 ```
 
@@ -132,7 +132,7 @@ Al abrir este dataset, puede observarse con claridad que hay algunos campos que 
 
 ```{r}
 datos <- read.csv(
-  file = "../data/extras.csv", 
+  file = "../data/Chapter_5/data_c_1.csv", 
   stringsAsFactors = TRUE, 
   encoding = "UTF-8", 
   na.strings = c("", "NA")
@@ -153,9 +153,11 @@ library(skimr)
 skim(datos)
 ```
 
-### Manejo de datos daltantes
+### Manejo de datos faltantes
 
-Luego de identificar los valores faltantes de nuestro dataframe, la decisión siguiente a tomar es qué hacer con ellos. Hay varias posibilidades
+Luego de identificar los valores faltantes de nuestro dataframe, la decisión siguiente a tomar es qué hacer con ellos.
+
+Hay varias posibilidades:
 
 1.  Eliminar los valores faltantes
 2.  Reemplazar las variables numéricas con:
@@ -190,9 +192,15 @@ Otras veces necesitamos no eliminar, sino reemplazar los valores faltantes por u
 
 Si queremos generar un reemplazo de NAs por un valor calculado, digamos, la media de esa variable, podemos guardar dicho valor en un objeto y luego imputarlo con la función [*replace_na*.](https://www.rdocumentation.org/packages/tidyr/versions/0.8.3/topics/replace_na) Dicha función debe recibir una lista que indique qué imputar a cada variable. Si queremos hacerlo con una sola, se especifica la variable, sino, se van agregando con comas.
 
+Para ver el impacto de esta técnica, localizaremos un NA en la fila 31 en la variable revenue y veremos cómo se modifica. Para visualizarlo, podemos ver la tabla entera con la función *View* o vamos directo a esa sección con la función *slice.*
+
+```{r}
+datos %>% slice(25:35)
+```
+
 ```{r}
 mean_revenue <- round(mean(datos$revenue, na.rm = TRUE),0)
-datos %>% replace_na(list(revenue = mean_revenue)) %>% head()
+datos %>% replace_na(list(revenue = mean_revenue)) %>% slice(25:35)
 ```
 
 Si quisiéramos reemplazar todos los NAs de los datos numéricos por un 0, realmente específicar este valor para cada variable puede resultar tedioso. Por tanto, podemos usar un método para modificar todas las columnas numéricas de una vez, tal como se explica en los comentarios del siguiente código.
@@ -209,7 +217,7 @@ datos %>% # Paso 1
   select_if(is.numeric) %>% # Paso 2
   replace(is.na(.),0) %>% # Paso 3
   cbind(select_if(datos, negate(is.numeric))) %>% # Paso 4
-  filter(id == 31)
+  slice(25:35)
 ```
 
 Esto podemos aplicarlo con las variables categóricas también, por ejemplo, si queremos que los NAs sean "sin dato" o de algún valor que nos interese. Para esto vamos a necesitar un paquete para el tratamiento de valores de factores, llamada [*forcats*](https://www.rdocumentation.org/packages/forcats/versions/0.4.0). Este paquete tiene una función dedicada expresamente para sustituir los NAs por otro valor, el truco es reemplazar las variable existente con la nueva generada a través de *mutate.* Si en vez de factores, trabajáramos con caracteres, la función *replace* debería ser suficiente.
@@ -223,6 +231,21 @@ datos %>%
   city = fct_explicit_na(city, "Otro"),
   product_type = fct_explicit_na(product_type, "Otro") ) %>% 
   head()
+```
+
+```{r}
+datos_sin_na <- datos %>% 
+  select_if(is.numeric) %>% # Paso 2
+  replace(is.na(.),0) %>% # Paso 3
+  cbind(select_if(datos, negate(is.numeric))) %>% 
+  mutate(
+    date = fct_explicit_na(date, "1/1/1900"),
+    product = fct_explicit_na(product, "sinDato"),
+    city = fct_explicit_na(city, "Otro"),
+    product_type = fct_explicit_na(product_type, "Otro") 
+  )
+  
+summary(datos_sin_na)
 ```
 
 ## Manejo de duplicados
@@ -262,7 +285,7 @@ datos %>%
   
 ```
 
-Por defecto al indicarle cuáles variables nos interesa obtener los valores únicos, el *distinct* elimina el resto, pero podemos evitar esto si le agregamos el parámetro *keep_all.* Debe tenerse presente que *distinct* solo se quedará con el primer registro. Si nuestra intención es que esto sea diferente, debemos ordenar el dataframe de la forma en que elimine los registros que nosotros querramos.
+Por defecto al indicarle cuáles variables nos interesa obtener los valores únicos, el *distinct* elimina el resto, pero podemos evitar esto si le agregamos el parámetro *keep_all.* **Debe tenerse presente que *distinct* solo se quedará con el primer registro**. Si nuestra intención es que esto sea diferente, debemos ordenar el dataframe de la forma en que elimine los registros que nosotros querramos.
 
 ```{r}
 datos %>% 
@@ -280,7 +303,7 @@ datos %>%
 
 Así como los factores y los caracteres tienen sus particularidades, suelen dar menos problemas que las fechas, las cuales están condicionadas por formatos. Para manejar este tipo de dato, el paquete más usado se llama [*lubridate*](https://www.rdocumentation.org/packages/lubridate/versions/1.8.0)*.*
 
-Muchas veces R interpreta las fechas como textos en la medida que el formato no es el mismo que el estandarizado (AAAA-MM-DD). Cuando esto ocurre, debemos transformar la variable con, por ejemplo, una función de lubridate que transforma una variable en fecha, asignándole a cada valor de la fecha el del orden de la función.
+Muchas veces R interpreta las fechas como textos en la medida que el formato no es el mismo que el estandarizado (YYYY-MM-DD). Cuando esto ocurre, debemos transformar la variable con, por ejemplo, una función de *lubridate* que transforma una variable en fecha, asignándole a cada valor de la fecha el del orden de la función.
 
 En este caso usaremos *dmy* ya que en nuestra variable el formato es DD/MM/YYYY. Si fuera, por ejemplo, MM-DD-AAAA, podríamos usar *mdy* (no es relevante el simbolo que separe a los elementos de la fecha). Hay también funciones que contienen horas, minutos y segundos.
 
@@ -309,7 +332,7 @@ datos %>%
   head()
 ```
 
-Otro valor que traen las fechas es la generación de variables calculadas a partir de fechas. Es muy común querer obtener el tiempo transcurrido entre una fecha y otra. En el siguiente ejemplo se presenta cómo encontrar la diferencia en días, meses y años. Es básicamente la división entre la cantidad de días (unidad de medida de lubridate) por el segmentador que nos interesa. El uso de los % es para que redondee.
+Otro valor que traen las fechas es la generación de variables calculadas a partir de fechas. Es muy común querer obtener el tiempo transcurrido entre una fecha y otra. En el siguiente ejemplo se presenta cómo encontrar la diferencia en días, meses y años. Es básicamente la división entre la cantidad de días (unidad de medida de *lubridate*) por el segmentador que nos interesa. El uso de los % es para que redondee.
 
 ```{r}
 datos %>% 

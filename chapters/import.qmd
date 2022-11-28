@@ -17,33 +17,36 @@ echo: true
 
 Cuando trabajamos con archivos de texto plano, lo mejor que podemos hacer cuando pensamos en importarlo, es abrirlo con un bloc de notas (en la medida que el tamaño lo permita).
 
-La función más elemental para importar archivos de texto plano es *read.table.* Esta función tiene la particularidad que prácticamente no toma ningun valor por defecto en sus parámetros y hay que rellenarlos todos de modo de generar una importación.
+La función más elemental para importar archivos de texto plano es *read.table.* Esta función tiene la particularidad que prácticamente no toma ningun valor por defecto en sus parámetros y hay que rellenarlos todos de modo de generar una importación. Un parámetro que es obligatorio a la hora de importar datos es, justamente, la ruta en donde se encuentra el mismo. En el siguiente ejemplo utilizamos la función *read.table* para leer los datos de este capítulo, y guardarlo dentro de un objeto *data,* tal como hicimos en los ejemplos del capítulo anterior.
 
 ```{r, eval=FALSE}
-data <- read.table("../data/courseid_3282_participants.csv")
+data <- read.table("../data/Chapter_1/data_c_1.csv")
 data
 ```
 
-La sentencia ejecutada anteriormente da el siguiente error:
+Sin embargo, la sentencia ejecutada anteriormente da el siguiente error:
 
 > Error in scan(file = file, what = what, sep = sep, quote = quote, dec = dec, : line 2 did not have 3 elements
 
-Esto ocurre porque read.table no sabe qué hacer en el caso de que una fila no contenga el mismo número de elementos que el resto. Para solucionar esto podemos agregar el parámetro que lo aclare.
+Esto ocurre porque read.table no sabe qué hacer en el caso de que una fila no contenga el mismo número de elementos que el resto. Para solucionar esto podemos agregar el parámetro que lo aclare. También voy a agregar la aclaración del parámetro *file*, que es el que corresponde a la ruta del archivo. Esto por lo general se omite a la hora de usar estas funciones pues se da por obvio que el primer parámetro es la ruta del archivo.
 
 ```{r}
-data <- read.table("../data/courseid_3282_participants.csv", fill = NA)
+data <- read.table(
+  file = "../data/Chapter_2/data_c_1.csv", 
+  fill = NA
+)
 ```
 
-```{r, echo =FALSE}
+```{r, echo = FALSE}
 library(knitr)
 kable(head(data))
 ```
 
-**Tenemos la tabla!** Aunque, realmente no es lo que esperábamos. Para empezar, los nombres de las columnas no son correctos. Parece ser que read.table por defecto no se da cuenta que la primera fila corresponde a los encabezados de la tabla. Vamos a tener que aclarárselo también.
+**Tenemos la tabla!** Para verla, podemos correr en consola el nombre de la tabla, o verla en la parte superior derecha en la sección de RStudio *enviroment.* Aunque, realmente no es lo que esperábamos. Para empezar, los nombres de las columnas no son correctos. Parece ser que read.table por defecto no se da cuenta que la primera fila corresponde a los encabezados de la tabla. Vamos a tener que aclarárselo también.
 
 ```{r}
 data <- read.table(
-  file = "../data/courseid_3282_participants.csv", 
+  file = "../data/Chapter_2/data_c_1.csv", 
   fill = NA,
   header = TRUE
 )
@@ -59,7 +62,7 @@ El problema radica en que read.table toma por defecto que el separador de los da
 
 ```{r}
 data <- read.table(
-  file = "../data/courseid_3282_participants.csv", 
+  file = "../data/Chapter_2/data_c_1.csv",
   fill = NA,
   header = TRUE,
   sep = ","
@@ -70,13 +73,15 @@ data <- read.table(
 kable(head(data))
 ```
 
-**Ya casi es nuestra tabla!** Pero siguen habiendo cuestiones a pulir, y es que parece haber algún problema con los caracteres especiales, tales como los paréntesis o tildes. Podemos solucionar esto especificando el tipo de encoding que tiene el archivo. Para descubrir el mismo, debemos mirar en la parte inferior derecha del archivo de texto plano.
+**Ya casi es nuestra tabla!** Pero siguen habiendo cuestiones a pulir, y es que parece haber algún problema con los caracteres especiales, tales como los paréntesis o tildes. Podemos solucionar esto especificando el tipo de encoding[^import-1] que tiene el archivo. Para descubrir el mismo, debemos mirar en la parte inferior derecha del archivo de texto plano.
 
-![](images/encoding_2.png)
+[^import-1]: El encoding es el método por el cual el lenguaje humano se transforma a lenguaje computacional (0 y 1). Es relevante que el encoding que use R sea el correcto para que los datos mantengan su verdadero valor.
+
+![](images/paste-1600577A.png)
 
 ```{r}
 data <- read.table(
-  file = "../data/courseid_3282_participants.csv", 
+  file = "../data/Chapter_2/data_c_1.csv", 
   fill = NA,
   header = TRUE,
   sep = ",",
@@ -88,16 +93,16 @@ data <- read.table(
 kable(head(data))
 ```
 
-**Ahora si tenemos nuestra tabla!** R no es amigo de los caracteres especiales de ningún tipo. Está pensado para nombres funcionales e informáticos, no para humanos. Por tanto, conviene darles los nombres que nosotros queremos a los encabezados.
+**Ahora si tenemos nuestra tabla!** R no es amigo de los caracteres especiales de ningún tipo. Está pensado para nombres funcionales e informáticos, no para humanos. Por tanto, conviene darles los nombres que nosotros queremos a los encabezados. En el siguiente bloque se explica cada linea.
 
 ```{r}
 data <- read.table(
-  file = "../data/courseid_3282_participants.csv", 
-  fill = NA,
-  header = TRUE,
-  sep = ",",
-  fileEncoding = 'UTF-8-BOM',
-  col.names = c('nombre', 'apellido', 'direccion_correo')
+  file = "../data/Chapter_2/data_c_1.csv", # Ruta del archivo
+  fill = NA, # Rellenar con NA los datos faltantes
+  header = TRUE, # La tabla tiene encabezados
+  sep = ",", # El separador de valores es la coma
+  fileEncoding = 'UTF-8-BOM', # El encoding es UTF-8-BOM
+  col.names = c('nombre', 'apellido', 'direccion_correo') # Nombre de columnas
 )
 ```
 
@@ -121,7 +126,7 @@ Por ejemplo, si sabemos que nuestro archivo es un csv, podemos usar la función 
 
 ```{r}
 data <- read.csv(
-  file = "../data/courseid_3282_participants.csv",
+  file = "../data/Chapter_2/data_c_1.csv",
   fileEncoding = 'UTF-8-BOM',
   col.names = c('nombre', 'apellido', 'direccion_correo')
 )
@@ -141,7 +146,7 @@ Adicionalmente, el paquete [*data.table*](https://www.rdocumentation.org/package
 
 ```{r}
 library(data.table)
-data <- fread("../data/courseid_3282_participants.csv")
+data <- fread("../data/Chapter_2/data_c_1.csv")
 ```
 
 ```{r, echo =FALSE}
@@ -152,7 +157,7 @@ El único inconveniente parece ser el encoding, pero aclarándoselo, la función
 
 ```{r}
 data <- fread(
-  file = "../data/courseid_3282_participants.csv",
+  file = "../data/Chapter_2/data_c_1.csv",
   encoding = "UTF-8"
 )
 ```
@@ -163,18 +168,18 @@ kable(head(data))
 
 ### Funciones más eficientes
 
-Hay un paquete en R especializado en la lectura de archivos. Ese paquete se llama [*readr*](https://www.rdocumentation.org/packages/readr/versions/2.1.2)*.* El objetivo de este paquete es realizar una importación de datos más veloz y eficiente. Además, nos ahorra tiempo en la medida que detecta automáticamente el separador de los datos.
+Hay un paquete en R especializado en la lectura de archivos. Ese paquete se llama [*readr*](https://www.rdocumentation.org/packages/readr/versions/2.1.2)*.* El objetivo de este paquete es realizar una importación de datos más veloz y eficiente.
 
 ```{r}
 library(readr)
-data <- read_csv("../data/courseid_3282_participants.csv")
+data <- read_csv("../data/Chapter_2/data_c_1.csv")
 ```
 
 ```{r, echo =FALSE}
 kable(head(data))
 ```
 
-Esta función no solo lee la información con mayor velocidad, sino que también es más inteligente a la hora de resolver la cuestión del encoding y el problema de los nombres de las columnas. También nos brinda información sobre el dataset, como la cantidad de filas, columnas, y el tipo de dato de ellas. Podemos acceder a mayor información sobre esto último su complementamos con la función spec.
+Esta función no solo lee la información con mayor velocidad, sino que también nos brinda información sobre el dataset, como la cantidad de filas, columnas, y el tipo de dato de ellas. Podemos acceder a mayor información sobre esto último su complementamos con la función spec.
 
 ```{r}
 spec(data)
@@ -184,7 +189,7 @@ El paquete readr permite también editar el tipo de las columnas en el momento q
 
 ```{r}
 data <- read_csv(
-  file = "../data/courseid_3282_participants.csv",
+  file = "../data/Chapter_2/data_c_1.csv",
   col_names = c("nombre", "apellido", "direccion_correo"),
   col_types = cols(
     nombre = col_character(),
@@ -204,7 +209,7 @@ Sin embargo, esto nos trajo un problema, ya que parece que *readr* entiende que 
 
 ```{r}
 data <- read_csv(
-  file = "../data/courseid_3282_participants.csv",
+  file = "../data/Chapter_2/data_c_1.csv",
   col_names = c("nombre", "apellido", "direccion_correo"),
   col_types = cols(
     nombre = col_character(),
@@ -225,7 +230,7 @@ Excel es otro clásico modo de almacenar información, aunque no en grandes vol�
 
 ```{r}
 library(openxlsx)
-data <- read.xlsx("../data/ACV EFMA 2022.xlsx")
+data <- read.xlsx("../data/Chapter_2/data_c_2.xlsx")
 ```
 
 ```{r, echo =FALSE}
@@ -238,7 +243,7 @@ Para evitar que esto suceda, debemos utilizar el parámetro correspondiente: det
 
 ```{r}
 data <- read.xlsx(
-  xlsxFile = "../data/ACV EFMA 2022.xlsx",
+  xlsxFile = "../data/Chapter_2/data_c_2.xlsx",
   detectDates = TRUE
 )
 ```
@@ -251,7 +256,7 @@ También se puede seleccionar de qué hoja del libro hacer la lectura, entre otr
 
 ```{r}
 data <- read.xlsx(
-  xlsxFile = "../data/ACV EFMA 2022.xlsx",
+  xlsxFile = "../data/Chapter_2/data_c_2.xlsx",
   detectDates = TRUE,
   sheet = 2
 )
@@ -261,24 +266,9 @@ data <- read.xlsx(
 kable(head(data))
 ```
 
-## Archivos de SPSS
-
-Es muy común migrar de SPSS a R, y por tanto, hay un paquete que tenemos que tener presente para acceder a archivos creados a partir de esa herramienta, y es el [*haven*](https://www.rdocumentation.org/packages/haven/versions/2.5.0). Dentro de ese paquete, tenemos una función denominada *read_sav*, que sirve para acceder a acceder a archivos de este estilo.
-
-```{r}
-library(haven)
-data <- read_sav("../data/Natalidad2021_ENAP_CursoR.sav")
-```
-
-```{r, echo =FALSE}
-kable(head(data))
-```
-
 ## Otros métodos
 
 Además de usar estas funciones, es posible importar la información desde comandos del RStudio. Lo que esto permite es generar el código de la función sin tener que escribirlo. Se puede hacer seleccionando el botón import en la parte superior de la pestaña de Environment.
-
-![](imp.png)
 
 Si queremos subir datos de forma rápida en R, podemos usar la función *read.clipboard*, que convierte en dataframe lo que tengamos seleccionado.
 

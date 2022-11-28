@@ -1,1 +1,29 @@
 # Próximos pasos
+
+## Qué más hay para hacer?
+
+El camino de los datos es largo y amplio.
+
+Manejar una herramienta como R para el análisis descriptivo es una habilidad relevante, y conviene ponerla en práctica en base a proyectos. La mejor forma de practicar el uso de una herramienta como R es proponerse solucionar un problema basado en datos, y hacerlo enteramente dentro de la herramienta RStudio.
+
+Muchas veces necesitamos realizar análisis para generar un informe de situación. Podemos realizar el informe enteramente en R y generar un documento PDF, HTML, o Word mediante el uso de [Quarto](https://quarto.org/). Esto es un framework que permite generar documentos dentro de RStudio y que funciona con otros lenguajes además de R, como Python o Julia. Creando un documento en RStudio podemos insertar las tablas o gráficas que querramos juntos con el texto descriptivo del informe, sin necesidad de pasar de una herramienta a otra.
+
+En otras ocasiones resulta necesario generar un dashboard dinámico que presente determinada información. Para ello es conveniente usar el framework [Shiny](https://shiny.rstudio.com/), que permite construir tableros interactivos para el usuario dentro de RStudio. Además, se puede posteriormente publicar dentro de una página web para el posterior uso de los usuarios finales. Nada tiene que envidiarle a herramientas como Power BI o Tableau.
+
+## A veces necesitamos ayuda
+
+Sin dudas que con un libro o un curso es difícil decir que uno esté capacitado para llevar adelante de forma independiente un proyecto de análisis de datos con R o cualquier herramienta. Es conveniente que dicha tarea sea un trabajo colectivo, y en muchos casos, mentoreado.
+
+Si sientes que tu o tu organización podrían usar una mano para llevar adelante un proyecto de datos con R, no dudes en [contactarme](https://www.danblanc.info/).
+
+## Desafío
+
+Ahora el desafío es tuyo.
+
+1.  Toma un proyecto basado en datos y ponte a resolverlo con R y RStudio
+2.  Estudia si dicho proyecto podría beneficiarse de herramientas como Quarto o Shiny, y apréndelas si es necesario.
+3.  Pide ayuda o mentoría si crees que el proyecto lo requiere
+
+Si este libro te ayudó en tu camino, me encantaría que algún día me lo mencionaras.
+
+Hasta entonces, ¡éxitos en tu carrera, data analyst!

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.0.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,15 +13,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 </style>
 
 
@@ -116,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/data_analisis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos con R</span></a>
+  <a href="./chapters/data_analisis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -139,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
@@ -189,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="sobre-este-ebook">Sobre este ebook</h2>
 <p>El objetivo de este ebook es brindarle al lector una introducción amigable pero completa sobre el manejo básico de R para el análisis de datos. Se presupone que quien utilice este manual desde el comienzo, no tenga conocimientos previos de R o de programación, por tanto, podrá utilizar esta herramienta para dar sus primeros pasos en el mundo de la ciencia de datos.</p>
 <p>También puede ser de utilidad para quien tenga experiencia, en la medida que cada tanto es de utilidad repasar los conceptos fundamentales, especialmente si hace tiempo que no realizamos determinada tarea, o si nunca se tuvo la necesidad de encarar determinado proyecto, por ejemplo, una Shiny App.</p>
-<p>El libro se divide en X capítulos:</p>
+<p>El libro se divide en 7 capítulos:</p>
 <ol type="1">
 <li><p>Introducción a R, funciones y RStudio</p></li>
 <li><p>Importación de datos</p></li>
@@ -197,8 +192,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Análisis de datos con R</p></li>
 <li><p>Manipulación de datos</p></li>
 <li><p>Visualización</p></li>
-<li><p>Informes interactivos y automatizados</p></li>
-<li><p>Dashboards interactivos</p></li>
+<li><p>Próximos pasos</p></li>
 </ol>
 </section>
 <section id="sobre-mi" class="level2">
@@ -284,8 +278,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

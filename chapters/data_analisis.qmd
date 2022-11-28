@@ -1,5 +1,5 @@
 ---
-title: "Análisis de datos con R"
+title: "Análisis de datos"
 author: "Daniel Blanc"
 format: 
   html:
@@ -26,130 +26,126 @@ install.packages('tidyverse')
 library(tidyverse)
 ```
 
-### Manipulación del dataframe
+## Manipulación del dataframe
 
-Para obtener los datos, podemos utilizar algunas de las funciones que hemos visto en el curso.
+Para obtener los datos, podemos utilizar algunas de las funciones que hemos visto en el curso. En este caso utilizaremos un dataset con datos sobre salarios de diversas instituciones de salud.
 
 ```{r}
-sips <- read_delim("../data/Sips_febrero22.csv",delim = ";")
+df <- read_csv("../data/Chapter_4/data_c_1.csv")
 ```
 
 ```{r}
-glimpse(sips)
+glimpse(df)
 ```
 
-Parece ser que nuestro dataset tiene muchas variables. Una de las funciones que tidyverse provee nos permite seleccionar rápidamente las columnas con las que vamos a trabajar. Esta función se llama *select*. Para usar esta función ponemos como primer parámetro el nombre del dataset que vamos a filtrar, y luego los nombres de las columnas que nos interesan.
+Parece ser que nuestro dataset tiene muchas variables que no utilizaremos. Una de las funciones que tidyverse provee nos permite seleccionar rápidamente las columnas con las que vamos a trabajar. Esta función se llama *select*. Para usar esta función ponemos como primer parámetro el nombre del dataset que vamos a filtrar, y luego los nombres de las columnas que nos interesan.
 
 ```{r}
-sips_filtrado <- select(
-  sips, anio, mes,inscod, insnom, cod_persona, accionista, sexo
+df_filtrado <- select(
+  df, institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio
 )
-str(sips_filtrado)
+str(df_filtrado)
 ```
 
 Ahora tenemos un dataframe más manejable. Siempre es recomendable quedarse con las columnas que se utilizarán para el análisis, tanto por un tema de facilidad de comprensión del dataset como por el uso de memoria del computador.
 
-La función *select* se encuentra dentro del paquete *dplyr*, que a su vez está dentro de *tidyverse*. Este paquete permite el uso de *pipes* para concatenar una serie de actos con el dataframe. No es obligación usarlo, pero sirve para ordenar una serie de acciones que querremos realizar sobre los datos.
+La función *select* se encuentra dentro del paquete *dplyr*, que a su vez está dentro de *tidyverse*. Este paquete permite el uso de *pipes (%\>%)* para concatenar una serie de actos con el dataframe. No es obligación usarlo, pero sirve para ordenar una serie de acciones que querremos realizar sobre los datos.
 
 Se puede usar de la siguiente manera:
 
 ```{r}
-sips_filtrado <- sips %>% 
+df_filtrado <- df %>% 
   select(
-    anio, mes,inscod, insnom, cod_persona, accionista, sexo
+    institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio
   )
 ```
 
-Como vemos, de esta forma obtenemos el mismo resultado. Lo que hacemos es decirle a R que a partir de ahora trabajaremos con el dataset *sips* y que todo lo que viene a continuación va a ser en relación a esa tabla. Por tanto, a partir de ahí no habrá que usar los \$ para referirse a las columnas, simplemente dará por hecho que son del dataframe. **Esto sucede con todas las funciones de tidyverse que se usen con los *pipes.***
+Como vemos, de esta forma obtenemos el mismo resultado. Lo que hacemos es decirle a R que a partir de ahora trabajaremos con el dataset *df* y que todo lo que viene a continuación va a ser en relación a esa tabla. Por tanto, a partir de ahí no habrá que usar los \$ para referirse a las columnas, simplemente dará por hecho que son del dataframe. **Esto sucede con todas las funciones de tidyverse que se usen con los *pipes.***
 
 Otro tipo de filtro que podemos querer realizar es hacia las filas. Anteriormente se ha visto que pueden seleccionarse filtras manualmente aclarando el número de fila y demás, pero por lo general resulta más conveniente filtrar en base a una condición. Por ejemplo, veamos qué organizaciones tenemos en el dataset.
 
 ```{r}
-unique(sips_filtrado$insnom)
+unique(df_filtrado$institucion)
 ```
 
-Vamos a querer trabajar con los registros de MP, por tanto, podemos usar funciones de tidyverse para realizar esta tarea. Crearemos un nuevo dataset denominado sips_filtrado_mp en donde solo almacenaremos registros de esta entidad.
+Vamos a querer trabajar con los registros de *ASFE*, por tanto, podemos usar funciones de tidyverse para realizar esta tarea. Crearemos un nuevo dataset denominado df_filtrado_asfe en donde solo almacenaremos registros de esta entidad.
 
 ```{r}
-sips_filtrado_mp <- sips_filtrado %>% 
-  filter(insnom == 'MP')
-head(sips_filtrado_mp)
+df_filtrado_asfe <- df_filtrado %>% 
+  filter(institucion == 'ASFE')
+
+head(df_filtrado_asfe)
 ```
 
-Podemos usar el select no solo para elegir las variables que queremos sino también para desechar las que no nos interesan. Por ejemplo, ahora tenemos un dataset que solo tiene registros de MP, por tanto las variables de código de institución y nombre de institución nos aportan poco, por lo que podemos quitarlas.
+Podemos usar el select no solo para elegir las variables que queremos sino también para desechar las que no nos interesan. Por ejemplo, ahora tenemos un dataset que solo tiene registros de MP, por tanto la variable con el nombre de institución nos aporta poco, por lo que podemos quitarla.
 
 ```{r}
-sips_filtrado_mp <- sips_filtrado_mp %>% select(-inscod, -insnom)
-head(sips_filtrado_mp)
+df_filtrado_asfe <- df_filtrado_asfe %>% select(-institucion)
+head(df_filtrado_asfe)
 ```
 
-El último detalle que se le puede hacer al dataframe para que quede perfecto es cambiarle algunos nombres para que reflejen mejor el contenido de las variables. En este caso vamos a querer modificar los nombres de columna de cod_persona a documento y accionista a es_accionista. Podemos hacerlo con la función *rename.* Debemos aclararle el nuevo nombre de la variable y el nombre de la que vamos a sustituir. Se puede usar para varias columnas a la vez.
+El último detalle que se le puede hacer al dataframe para que quede perfecto es cambiarle algunos nombres para que reflejen mejor el contenido de las variables. En este caso vamos a querer modificar los nombres de columna de cod_persona a documento y socio a es_accionista. Podemos hacerlo con la función *rename.* Debemos aclararle el nuevo nombre de la variable y el nombre de la que vamos a sustituir. Se puede usar para varias columnas a la vez.
 
 ```{r}
-sips_filtrado_mp <- sips_filtrado_mp %>% 
+df_filtrado_asfe <- df_filtrado_asfe %>% 
   rename(
     documento = cod_persona,
-    es_accionista = accionista
+    es_accionista = socio
   )
-head(sips_filtrado_mp)
+
+head(df_filtrado_asfe)
 ```
 
 Ya tenemos el dataframe tal cual como queremos, pero el verdadero poder de tidyverse radica en la concatenación de *pipes* para alcanzar el objetivo en una sola orden a R. Podemos obtener el mismo dataframe que nos llevó todo este laboratorio de la siguiente manera:
 
 ```{r}
-sips_filtrado_mp <- sips %>% 
-  select(anio, mes,inscod, insnom, cod_persona, accionista, sexo) %>% 
-  filter(insnom == 'MP') %>% 
-  select(-inscod, -insnom) %>% 
-  rename(documento = cod_persona, es_accionista = accionista)
+df_filtrado_asfe <- df %>% 
+  select(institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio) %>% 
+  filter(institucion == 'ASFE') %>% 
+  select(-institucion) %>% 
+  rename(documento = cod_persona, es_accionista = socio)
   
-head(sips_filtrado_mp)
+head(df_filtrado_asfe)
 ```
 
-### Transformación de datos
+## Transformación de datos
 
 Tidyverse también nos provee funciones para agregar y modificar columnas. Estas funciones son *mutate* y *transmute*. Mutate permite agregar una columna nueva al dataframe. Transmute hace lo mismo pero además elimina el resto de las columnas, permitiendo hacer un select implícito.
 
-Para empezar, vamos a querer volver a tener una variable que idenfique la institución, su nombre será institucion y su contenido "Medicina Personalizada".
+Para empezar, vamos a querer volver a tener una variable que idenfique la institución, su nombre será institucion y su contenido "Asociación de Salud Federal del Estado".
 
 ```{r}
-sips_columnas <- sips_filtrado_mp %>% mutate(institucion = "Medicina Personalizada")
-head(sips_columnas)
+df_columnas <- df_filtrado_asfe %>% 
+  mutate(institucion = "Asociación de Salud Federal del Estado")
+
+head(df_columnas)
 ```
 
-Otra necesidad que tenemos es desprendernos de las variables anio y mes y generar una variable fecha que sea el primer día del mes y el año detallado en las columnas. Para alcanzar esto usaremos la función de concatenación en R llamada *paste* y mediante *mutate* la insertaremos en el dataframe. También debemos aclararle que el formato debe ser de fecha.
+Nos interesará generar una variable genero que sustituya a la columna sexo y sea el mismo contenido pero en texto. Para esto podemos usar la función [*if_else*](https://dplyr.tidyverse.org/reference/if_else.html)*.* Esta función básicamente realiza el mismo trabajo que la función de excel: le insertamos una condición y luego el siguiente parámetro es el que inserta en caso de que la condición se cumpla, y el siguiente en caso que no. Luego, eliminaremos la variable sexo ya que no la utilizaremos y renombraremos la creada como su original.
 
 ```{r}
-sips_columnas <- sips_columnas %>% 
-  mutate(fecha = as.Date(paste(anio, mes, "1", sep = "-"))) %>% 
-  select(-anio,-mes)
-head(sips_columnas)
-```
-
-También nos interesará generar una variable genero que sustituya a la columna sexo y sea el mismo contenido pero en texto. Para esto podemos usar la función *ifelse.* Esta función básicamente realiza el mismo trabajo que la función de excel: le insertamos una condición y luego el siguiente parámetro es el que inserta en caso de que la condición se cumpla, y el siguiente en caso que no.
-
-```{r}
-sips_columnas <- sips_columnas %>% 
+df_columnas <- df_columnas %>% 
   mutate(genero = if_else(sexo == 1, "Hombre", "Mujer")) %>% 
   select(-sexo) %>% 
   rename(sexo = genero)
-head(sips_columnas)
+
+head(df_columnas)
 ```
 
-En este caso *if_else* resulta de utilidad porque la cantidad de condiciones eran pocas. En caso que se sean muchas, empieza a ser ineficiente en la medida que hay que concatenar if_else tras if_else. Para los casos en los que haya muchas posibilidades, es mejor usar *case_when.*
+Realizar esta serie de pasos es con el fin de mostrar el uso del *select* para eliminar columnas de otra manera que seleccionando las que queremos: seleccionando las que no queremos. **Si en *mutate* se hubiera puesto como nombre de variable *sexo,* hubiera sustituido a la original.**
+
+En este caso *if_else* resulta de utilidad porque la cantidad de condiciones eran pocas. En caso que se sean muchas, empieza a ser ineficiente en la medida que hay que concatenar if_else tras if_else. Para los casos en los que haya muchas posibilidades, es mejor usar [*case_when*](https://dplyr.tidyverse.org/reference/case_when.html?q=case_when#ref-usage)*.*
 
 Para demostrar el uso de esta función, crearemos una variable que diga si el documento es de menos de un millón, mayor a un millón, mayor a dos millones, a tres, a cuatro, y mayor a cinco. Al final de la función, se le especifica el tipo de dato de la variable resultante.
 
 ```{r}
-sips_columnas %>% mutate(
-  tipo_documento = case_when(
-    documento <= 10000000 ~ "Menor o igual a un millón",
-    documento > 10000000 ~ "Mayor a un millón",
-    documento > 20000000 ~ "Mayor a dos millones",
-    documento > 30000000 ~ "Mayor a tres millones",
-    documento > 40000000 ~ "Mayor a cuatro millones",
-    documento > 50000000 ~ "Mayor a cinco millones",
-    TRUE ~ "Otro"
+df_columnas %>% mutate(
+  franja_salario = case_when(
+    salario > 4000 ~ "Mayor a cuatro mil",
+    salario > 3000 ~ "Mayor a tres mil, menor o igual a cuatro mil",
+    salario > 2000 ~ "Mayor a dos mil, menor o igual a tres mil",
+    salario > 1000 ~ "Mayor a mil, menor o igual a dos mil",
+    TRUE ~ "Menor o igual a mil"
   )
 )
 ```
@@ -157,197 +153,170 @@ sips_columnas %>% mutate(
 Tal como puede apreciarse, se puede utilizar tidyverse para mostrar resultados en consola. No es necesario almacenar los procesos en objetos.
 
 ```{r}
-sips_filtrado_mp %>% 
-  mutate(
-    institucion = "Medicina Personalizada",
-    fecha = as.Date(paste(anio, mes, "1", sep = "-")),
-    genero = if_else(sexo == 1, "Hombre", "Mujer")
-  ) %>% 
-  select(
-    -anio,-mes,-sexo
-  ) %>% 
-  rename(
-    sexo = genero
-  ) 
+df_filtrado_asfe %>% 
+  mutate(genero = if_else(sexo == 1, "Hombre", "Mujer")) %>% 
+  select(-sexo) %>% 
+  rename(sexo = genero)
 ```
 
-### Combinación de filtros
+## Combinación de filtros
 
-En el uso del *case_when* se cometió un error adrede (?) ya que la primer condición, que es que el documento sea mayor a un millón, siempre se cumple, por tanto, asigna ese valor a todos los elementos y nunca llega a evaluar el resto. Hay dos posibilidades de solucionar este inconveniente.
+En el uso del *case_when* se pueden generar condiciones combinadas para alcanzar resultados más precisos. En el ejemplo anterior, se utilizó un método que implicaba ir de arriba hacía abajo con el filtro, pero lo más razonable sería combinar filtros para ser más robusto con la condición.
 
-La primera es invertir el orden de las condiciones, comenzando de arriba hacia abajo.
+Vamos a pedirle a R que los valore que para cada caso sea mayor que determinado valor, pero también menor al de la siguiente categoría. De este modo no importa el orden de las condiciones, ya que son muy precisas.
 
 ```{r}
-sips_columnas %>% mutate(
-  tipo_documento = case_when(
-    documento > 50000000 ~ "Mayor a cinco millones",
-    documento > 40000000 ~ "Mayor a cuatro millones",
-    documento > 30000000 ~ "Mayor a tres millones",
-    documento > 20000000 ~ "Mayor a dos millones",
-    documento > 10000000 ~ "Mayor a un millón",
-    documento <= 10000000 ~ "Menor o igual a un millón",
-    TRUE ~ "Otro"
+df_columnas %>% mutate(
+  franja_salario = case_when(
+    salario > 4000 ~ "Mayor a cuatro mil",
+    salario > 3000 & salario <= 4000 ~ "Mayor a tres mil, menor o igual a cuatro mil",
+    salario > 2000 & salario <= 3000 ~ "Mayor a dos mil, menor o igual a tres mil",
+    salario > 1000 & salario <= 2000 ~ "Mayor a mil, menor o igual a dos mil",
+    TRUE ~ "Menor o igual a mil"
   )
 )
 ```
 
-La otra opción es dar mayor precisión a las condiciones, y para eso se pueden combinar condiciones. Vamos a pedirle a R que los valore que para cada caso sea mayor que determinado valor, pero también menor al de la siguiente categoría. De este modo no importa el orden de las condiciones, ya que son muy precisas.
-
-```{r}
-sips_columnas %>% mutate(
-  tipo_documento = case_when(
-    documento <= 10000000 ~ "Menor o igual a un millón",
-    documento > 10000000 & documento < 20000000 ~ "Mayor a un millón",
-    documento > 20000000 & documento < 30000000 ~ "Mayor a dos millones",
-    documento > 30000000 & documento < 40000000 ~ "Mayor a tres millones",
-    documento > 40000000 & documento < 50000000 ~ "Mayor a cuatro millones",
-    documento > 50000000 ~ "Mayor a cinco millones",
-    TRUE ~ "Otro"
-  )
-)
-```
-
-### Agregaciones
+## Agregaciones
 
 Cuestión frecuente en el análisis de datos es la de generar tablas agregadas. Para tales usos el tidyverse tiene dos funciones que son clave: *group_by* y *summarise*.
 
-Group_by, tal como su nombre lo indica, sirve para generar agrupaciones a partir de una variable. Para utilizarla no debemos más que declarar cuál variable queremos utilizar para agrupar.
+*Group_by*, tal como su nombre lo indica, sirve para generar agrupaciones a partir de una variable. Para utilizarla no debemos más que declarar cuál variable queremos utilizar para agrupar.
 
-La función summarise, por otra parte, realiza las agregaciones que el analista requiere a partir de la agrupación declarada. Para practicar esto, volveremos a nuestro dataframe filtrado, y realizaremos una agrupación a partir de cada mutualista, mostrando la cantidad de personal para cada una.
+La función *summarise*, por otra parte, realiza las agregaciones que el analista requiere a partir de la agrupación declarada. Para practicar esto, volveremos a nuestro dataframe filtrado, y realizaremos una agrupación a partir de cada mutualista, mostrando la cantidad de personal para cada una.
 
 ```{r}
-personal_por_mutualista <- sips_filtrado %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n())
 
-head(personal_por_mutualista)
+personal_por_institucion
 ```
 
-Cuando usamos summarise, se debe elegir el nombre de la(s) columna(s) resumen, y utilizar una función de agregación. Las más clasicas son sum(), mean(), max(), min(), etc. Si queremos saber la cantidad de registros, lo que vendría a ser un count(), podemos usar la función n().
+Cuando usamos *summarise*, se debe elegir el nombre de la(s) columna(s) resumen, y utilizar una función de agregación. **Las más clasicas son *sum, mean, max, min***, etc. Si queremos saber la cantidad de registros, lo que vendría a ser un *count*, podemos usar la función *n* también.
 
-El dataframe resultante nos muestra la cantidad de registros por cada elemento de la columna insnom. Pero tal como puede apreciarse, el orden de estos elementos está pautado por el orden alfabético de la columna agrupada. Podemos pedirle a R que ordene a partir de otra columna con la función *arrange.* Esta función ordena por defecto de forma ascendente, si le ponemos *desc* a la columna, ordena de la otra forma.
+El *dataframe* resultante nos muestra la cantidad de registros por cada elemento de la columna *institucion*. Pero tal como puede apreciarse, el orden de estos elementos está pautado por el orden alfabético de la columna agrupada. Podemos pedirle a R que ordene a partir de otra columna con la función *arrange.* Esta función ordena por defecto de forma ascendente, si le ponemos *desc* a la columna, ordena de la otra forma.
 
 ```{r}
-personal_por_mutualista <- sips_filtrado %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n()) %>% 
   arrange(desc(cantidad))
 
-head(personal_por_mutualista)
+personal_por_institucion
 ```
 
 Ahora que nuestra tabla agregada está ordenada y clara, nos resulta relevante tener la certeza de que refleja la información solicitada. Es decir, si cada registro condice con una persona. Este elemento se denomina perfil del dato y relevante tenerlo claro a la hora de realizar un análisis, ya que en otro caso podemos dar información incorrecta.
 
-Para asegurarnos de tener la cantidad exacta de personas por institución, debemos tener el recuento de cédulas distintas que hay, por tanto no conteo simple no nos habilita esa posibilidad. Para esto podemos usar la función *n_distinct* que justamente trae un conteo de los valores únicos para cada columna. A diferencia de n(), a n_distinct debemos aclararle con qué columna estamos trabajando.
+Para asegurarnos de tener la cantidad exacta de personas por institución, debemos tener el recuento de cédulas distintas que hay, por tanto no conteo simple no nos habilita esa posibilidad. Para esto podemos usar la función *n_distinct* que justamente trae un conteo de los valores únicos para cada columna. A diferencia de *n*, a *n_distinct* debemos aclararle con qué columna estamos trabajando. En este caso, el resultado nos dará igual porque hay un solo caso por persona, pero si hubieran duplicados por institución, la cantidad sería menor.
 
 ```{r}
-personal_por_mutualista <- sips_filtrado %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n_distinct(cod_persona)) %>% 
   arrange(desc(cantidad))
 
-head(personal_por_mutualista)
+personal_por_institucion
 ```
 
-Otro análisis que podríamos hacer es qué porcentaje del total del personal tiene cada mutualista. Para hacer esto hay que generar una columna nueva luego de hacer la agrupación, podemos usar mutate.
+Otro análisis que podríamos hacer es qué porcentaje del total del personal tiene cada mutualista. Para hacer esto hay que generar una columna nueva luego de hacer la agrupación, podemos usar *mutate*.
 
 ```{r}
-personal_por_mutualista <- sips_filtrado %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n_distinct(cod_persona)) %>% 
   arrange(desc(cantidad)) %>% 
   mutate(porcentaje = cantidad / sum(cantidad) * 100)
 
-head(personal_por_mutualista)
+personal_por_institucion
 ```
 
 El porcentaje funciona correctamente pero ver tantos decimales aporta poco para el análisis en este caso. Podemos redondear los elementos de las columnas utilizando la función *round.* Esta función tiene dos parámetros: el número o columna que debe redondear, y la cantidad de decimales que debe permitir. En este caso le pondremos 0.
 
 ```{r}
-personal_por_mutualista <- sips_filtrado %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n_distinct(cod_persona)) %>% 
   arrange(desc(cantidad)) %>% 
   mutate(porcentaje = round(cantidad / sum(cantidad) * 100,0))
 
-head(personal_por_mutualista)
+head(personal_por_institucion)
 ```
 
 También es posible realizar agregaciones por más de una variable. Por ejemplo, sería interesante conocer la cantidad de personas por institución pero también a nivel de sexo. Para esto, debemos agrupar por institución y por sexo, y luego sumarisar.
 
 ```{r}
-personal_mutualista_sexo <- sips_filtrado %>% 
-  group_by(insnom, sexo,) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  group_by(institucion, sexo,) %>% 
   summarise(cantidad = n_distinct(cod_persona))
 
-head(personal_mutualista_sexo)
+personal_por_institucion
 ```
 
 ¿Se acuerdan cómo modificamos nuestra variable sexo a una con caracteres y no numérica? Podemos hacer todo en un solo paso para que quede más legible.
 
 ```{r}
-personal_mutualista_sexo <- sips_filtrado %>% 
-  mutate(sexo_1 = if_else(sexo == 1, "Hombre", "Mujer")) %>% 
-  group_by(insnom, sexo_1) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  mutate(sexo_1 = if_else(sexo == "M", "Hombre", "Mujer")) %>% 
+  group_by(institucion, sexo_1) %>% 
   summarise(cantidad = n_distinct(cod_persona))
 
-head(personal_mutualista_sexo)
+personal_por_institucion
 ```
 
 Quizás no nos interesa verlo en términos de hombre o mujer, y solo nos interesan los hombres. Podemos incorporar un filtro previamente y eso hace el trabajo.
 
 ```{r}
-personal_mutualista_hombres <- sips_filtrado %>% 
-  filter(sexo == 1) %>% 
-  group_by(insnom) %>% 
+personal_por_institucion <- df_filtrado %>% 
+  filter(sexo == "M") %>% 
+  group_by(institucion) %>% 
   summarise(cantidad = n_distinct(cod_persona)) %>% 
   arrange(desc(cantidad))
 
-head(personal_mutualista_hombres)
+head(personal_por_institucion)
 ```
 
-### Desagregaciones
+## Desagregaciones
 
-¿Y si quisiéramos ver el porcentaje de personal por sexo para cada institución?Para ese caso vamos a necesitar la función *ungroup,* que hace exactamente lo opuesto que el *group_by*, desagrega por la variable seleccionada.
+¿Y si quisiéramos ver el porcentaje de personal por sexo para cada institución? Para ese caso vamos a necesitar la función *ungroup,* que hace exactamente lo opuesto que el *group_by*, desagrega por la variable seleccionada.
 
 ```{r}
-personal_por_sexo <- sips_filtrado %>% 
-  mutate(sexo_1 = if_else(sexo == 1, "Hombre", "Mujer")) %>% 
-  group_by(insnom, sexo_1) %>% 
+personal_por_sexo <- df_filtrado %>% 
+  mutate(sexo_1 = if_else(sexo == "M", "Hombre", "Mujer")) %>% 
+  group_by(institucion, sexo_1) %>% 
   summarise(cantidad = n_distinct(cod_persona)) %>% 
-  group_by(insnom) %>% 
+  group_by(institucion) %>% 
   mutate(porcentaje = round(cantidad / sum(cantidad) * 100, 0)) %>% 
   ungroup()
 
-head(personal_por_sexo)
+personal_por_sexo
 ```
 
-Siempre resulta conveniente ejecutar estos ejemplos linea por linea y ver qué resultado va dando, el intentar leer toda la *pipeline* (así se denomina a una sucesión de acciones unidas por *pipes*)puede ser confuso si no se está familiarizado aún con las funciones.
+Siempre resulta conveniente ejecutar estos ejemplos linea por linea y ver qué resultado va dando, el intentar leer toda la *pipeline* (así se denomina a una sucesión de acciones unidas por *pipes*) puede ser confuso si no se está familiarizado aún con las funciones.
 
-### Desafío
+## Desafío
 
 Vamos a querer hacer un análisis que requerirá de todas nuestras herramientas analíticas.
 
--   Debe crearse una tabla que muestre la cantidad de personas por institución y sexo, tomando en cuenta solo los valores 1 y 2 de esta variable.
+-   Debe crearse una tabla que muestre la cantidad de personas por institución y sexo.
 
--   También debe indicar la cantidad del personal que sea accionista de la institución, y el porcentaje.
+-   También debe indicar la cantidad del personal que sea accionista (socio) de la institución, y el porcentaje.
 
 -   Finalmente, debe tener una variable que indique si la institución tiene accionistas hombres y mujeres, solo hombres, solo mujeres, o si no tiene accionistas.
 
-```{r}
+```{r eval=FALSE}
 #| code-fold: true
 #| code-summary: "Solución"
-personal_accionista <- sips_filtrado %>% 
-  filter(sexo == 1 | sexo == 2) %>% 
-  mutate(sexo_1 = if_else(sexo == 1, "Hombre", "Mujer")) %>% 
-  group_by(insnom, sexo_1) %>% 
+personal_accionista <- df_filtrado %>% 
+  mutate(sexo_1 = if_else(sexo == "M", "Hombre", "Mujer")) %>% 
+  group_by(institucion, sexo_1) %>% 
   summarise(
     cantidad_personas = n_distinct(cod_persona),
-    accionistas = sum(accionista)
+    accionistas = sum(socio)
   ) %>% 
   mutate(tiene_accionistas_h = if_else(accionistas > 0 & sexo_1 == "Hombre", 1, 0),
          tiene_accionistas_m = if_else(accionistas > 0 & sexo_1 == "Mujer", 1, 0)) %>% 
-  group_by(insnom) %>% 
+  group_by(institucion) %>% 
   mutate(
     tipo_accionistas = case_when(
       sum(tiene_accionistas_h) == 1 & sum(tiene_accionistas_m) == 1 ~ "Tiene accionistas de ambos sexos",
@@ -359,7 +328,7 @@ personal_accionista <- sips_filtrado %>%
   ) %>% 
   ungroup() %>% 
   select(-tiene_accionistas_h, -tiene_accionistas_m) %>% 
-  group_by(insnom) %>% 
+  group_by(institucion) %>% 
   summarise(
     cantidad_personas = sum(cantidad_personas),
     cantidad_accionistas = sum(accionistas),
