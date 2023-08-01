@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Blanc">
+
+<title>Introducción al análisis de datos con R - 4&nbsp; Análisis de datos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/data_manipulation.html" rel="next">
+<link href="../chapters/dataframes.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/data_analisis.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Introducción al análisis de datos con R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importación de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Estructura de data frames</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/data_analisis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/data_manipulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulación de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Visualización de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/cierre.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Próximos pasos</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenido</h2>
+   
+  <ul>
+  <li><a href="#tidyverse" id="toc-tidyverse" class="nav-link active" data-scroll-target="#tidyverse"><span class="header-section-number">4.1</span> Tidyverse</a></li>
+  <li><a href="#manipulación-del-dataframe" id="toc-manipulación-del-dataframe" class="nav-link" data-scroll-target="#manipulación-del-dataframe"><span class="header-section-number">4.2</span> Manipulación del dataframe</a></li>
+  <li><a href="#transformación-de-datos" id="toc-transformación-de-datos" class="nav-link" data-scroll-target="#transformación-de-datos"><span class="header-section-number">4.3</span> Transformación de datos</a></li>
+  <li><a href="#combinación-de-filtros" id="toc-combinación-de-filtros" class="nav-link" data-scroll-target="#combinación-de-filtros"><span class="header-section-number">4.4</span> Combinación de filtros</a></li>
+  <li><a href="#agregaciones" id="toc-agregaciones" class="nav-link" data-scroll-target="#agregaciones"><span class="header-section-number">4.5</span> Agregaciones</a></li>
+  <li><a href="#desagregaciones" id="toc-desagregaciones" class="nav-link" data-scroll-target="#desagregaciones"><span class="header-section-number">4.6</span> Desagregaciones</a></li>
+  <li><a href="#desafío" id="toc-desafío" class="nav-link" data-scroll-target="#desafío"><span class="header-section-number">4.7</span> Desafío</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de datos</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Blanc </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="tidyverse" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="tidyverse"><span class="header-section-number">4.1</span> Tidyverse</h2>
+<p>El paquete por excelencia para realizar análisis de datos con R se denomina <em>tidyverse.</em> Este paquete no es un paquete en si mismo, sino una colección de múltiples paquetes que comparten el objetivo: realizar análisis de datos.</p>
+<p>Al ser muchos paquetes, tarda un poco en instalar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'tidyverse'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="manipulación-del-dataframe" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="manipulación-del-dataframe"><span class="header-section-number">4.2</span> Manipulación del dataframe</h2>
+<p>Para obtener los datos, podemos utilizar algunas de las funciones que hemos visto en el curso. En este caso utilizaremos un dataset con datos sobre salarios de diversas instituciones de salud.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/Chapter_4/data_c_1.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 623
+Columns: 10
+$ institucion      &lt;chr&gt; "ASFE", "ASFE", "ASFE", "Blue Light", "St. Mokaroo", …
+$ sexo             &lt;chr&gt; "M", "M", "F", "F", "F", "F", "F", "M", "M", "M", "M"…
+$ fecha_nacimiento &lt;chr&gt; "24/08/1990", "11/04/1984", "07/10/1986", "12/01/1986…
+$ cod_persona      &lt;chr&gt; "31-054-1896", "93-328-1614", "83-633-7650", "74-256-…
+$ nombre           &lt;chr&gt; "Alonso", "Bernhard", "Kalina", "Nettie", "Guillema",…
+$ apellido         &lt;chr&gt; "Syddall", "Ebbotts", "Rapps", "Merner", "Loges", "Ba…
+$ area             &lt;chr&gt; "Training", "Training", "Human Resources", "Business …
+$ salario          &lt;dbl&gt; 3883, 3304, 2493, 3638, 469, 627, 4066, 2037, 2397, 8…
+$ mail             &lt;chr&gt; "asyddall0@topsy.com", "bebbotts1@plala.or.jp", "krap…
+$ socio            &lt;dbl&gt; 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1,…</code></pre>
+</div>
+</div>
+<p>Parece ser que nuestro dataset tiene muchas variables que no utilizaremos. Una de las funciones que tidyverse provee nos permite seleccionar rápidamente las columnas con las que vamos a trabajar. Esta función se llama <em>select</em>. Para usar esta función ponemos como primer parámetro el nombre del dataset que vamos a filtrar, y luego los nombres de las columnas que nos interesan.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_filtrado <span class="ot">&lt;-</span> <span class="fu">select</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  df, institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_filtrado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [623 × 7] (S3: tbl_df/tbl/data.frame)
+ $ institucion     : chr [1:623] "ASFE" "ASFE" "ASFE" "Blue Light" ...
+ $ sexo            : chr [1:623] "M" "M" "F" "F" ...
+ $ fecha_nacimiento: chr [1:623] "24/08/1990" "11/04/1984" "07/10/1986" "12/01/1986" ...
+ $ cod_persona     : chr [1:623] "31-054-1896" "93-328-1614" "83-633-7650" "74-256-9143" ...
+ $ area            : chr [1:623] "Training" "Training" "Human Resources" "Business Development" ...
+ $ salario         : num [1:623] 3883 3304 2493 3638 469 ...
+ $ socio           : num [1:623] 1 0 0 1 1 1 1 0 0 1 ...</code></pre>
+</div>
+</div>
+<p>Ahora tenemos un dataframe más manejable. Siempre es recomendable quedarse con las columnas que se utilizarán para el análisis, tanto por un tema de facilidad de comprensión del dataset como por el uso de memoria del computador.</p>
+<p>La función <em>select</em> se encuentra dentro del paquete <em>dplyr</em>, que a su vez está dentro de <em>tidyverse</em>. Este paquete permite el uso de <em>pipes (%&gt;%)</em>&nbsp;para concatenar una serie de actos con el dataframe. No es obligación usarlo, pero sirve para ordenar una serie de acciones que querremos realizar sobre los datos.</p>
+<p>Se puede usar de la siguiente manera:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_filtrado <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Como vemos, de esta forma obtenemos el mismo resultado. Lo que hacemos es decirle a R que a partir de ahora trabajaremos con el dataset <em>df</em> y que todo lo que viene a continuación va a ser en relación a esa tabla. Por tanto, a partir de ahí no habrá que usar los $ para referirse a las columnas, simplemente dará por hecho que son del dataframe. <strong>Esto sucede con todas las funciones de tidyverse que se usen con los <em>pipes.</em></strong></p>
+<p>Otro tipo de filtro que podemos querer realizar es hacia las filas. Anteriormente se ha visto que pueden seleccionarse filtras manualmente aclarando el número de fila y demás, pero por lo general resulta más conveniente filtrar en base a una condición. Por ejemplo, veamos qué organizaciones tenemos en el dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df_filtrado<span class="sc">$</span>institucion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ASFE"            "Blue Light"      "St. Mokaroo"     "RedHat Hospital"</code></pre>
+</div>
+</div>
+<p>Vamos a querer trabajar con los registros de <em>ASFE</em>, por tanto, podemos usar funciones de tidyverse para realizar esta tarea. Crearemos un nuevo dataset denominado df_filtrado_asfe en donde solo almacenaremos registros de esta entidad.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_filtrado_asfe <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(institucion <span class="sc">==</span> <span class="st">'ASFE'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_filtrado_asfe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  institucion sexo  fecha_nacimiento cod_persona area              salario socio
+  &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;
+1 ASFE        M     24/08/1990       31-054-1896 Training             3883     1
+2 ASFE        M     11/04/1984       93-328-1614 Training             3304     0
+3 ASFE        F     07/10/1986       83-633-7650 Human Resources      2493     0
+4 ASFE        F     19/04/1982       04-065-8324 Services              627     1
+5 ASFE        M     07/09/1986       49-644-6789 Marketing            2397     0
+6 ASFE        M     08/06/1990       66-578-6374 Product Manageme…     287     1</code></pre>
+</div>
+</div>
+<p>Podemos usar el select no solo para elegir las variables que queremos sino también para desechar las que no nos interesan. Por ejemplo, ahora tenemos un dataset que solo tiene registros de MP, por tanto la variable con el nombre de institución nos aporta poco, por lo que podemos quitarla.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_filtrado_asfe <span class="ot">&lt;-</span> df_filtrado_asfe <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>institucion)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_filtrado_asfe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  sexo  fecha_nacimiento cod_persona area               salario socio
+  &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;
+1 M     24/08/1990       31-054-1896 Training              3883     1
+2 M     11/04/1984       93-328-1614 Training              3304     0
+3 F     07/10/1986       83-633-7650 Human Resources       2493     0
+4 F     19/04/1982       04-065-8324 Services               627     1
+5 M     07/09/1986       49-644-6789 Marketing             2397     0
+6 M     08/06/1990       66-578-6374 Product Management     287     1</code></pre>
+</div>
+</div>
+<p>El último detalle que se le puede hacer al dataframe para que quede perfecto es cambiarle algunos nombres para que reflejen mejor el contenido de las variables. En este caso vamos a querer modificar los nombres de columna de cod_persona a documento y socio a es_accionista. Podemos hacerlo con la función <em>rename.</em> Debemos aclararle el nuevo nombre de la variable y el nombre de la que vamos a sustituir. Se puede usar para varias columnas a la vez.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_filtrado_asfe <span class="ot">&lt;-</span> df_filtrado_asfe <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">documento =</span> cod_persona,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">es_accionista =</span> socio</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_filtrado_asfe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  sexo  fecha_nacimiento documento   area               salario es_accionista
+  &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;
+1 M     24/08/1990       31-054-1896 Training              3883             1
+2 M     11/04/1984       93-328-1614 Training              3304             0
+3 F     07/10/1986       83-633-7650 Human Resources       2493             0
+4 F     19/04/1982       04-065-8324 Services               627             1
+5 M     07/09/1986       49-644-6789 Marketing             2397             0
+6 M     08/06/1990       66-578-6374 Product Management     287             1</code></pre>
+</div>
+</div>
+<p>Ya tenemos el dataframe tal cual como queremos, pero el verdadero poder de tidyverse radica en la concatenación de <em>pipes</em> para alcanzar el objetivo en una sola orden a R. Podemos obtener el mismo dataframe que nos llevó todo este laboratorio de la siguiente manera:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_filtrado_asfe <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(institucion, sexo, fecha_nacimiento, cod_persona, area, salario, socio) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(institucion <span class="sc">==</span> <span class="st">'ASFE'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">documento =</span> cod_persona, <span class="at">es_accionista =</span> socio)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_filtrado_asfe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  sexo  fecha_nacimiento documento   area               salario es_accionista
+  &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;
+1 M     24/08/1990       31-054-1896 Training              3883             1
+2 M     11/04/1984       93-328-1614 Training              3304             0
+3 F     07/10/1986       83-633-7650 Human Resources       2493             0
+4 F     19/04/1982       04-065-8324 Services               627             1
+5 M     07/09/1986       49-644-6789 Marketing             2397             0
+6 M     08/06/1990       66-578-6374 Product Management     287             1</code></pre>
+</div>
+</div>
+</section>
+<section id="transformación-de-datos" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="transformación-de-datos"><span class="header-section-number">4.3</span> Transformación de datos</h2>
+<p>Tidyverse también nos provee funciones para agregar y modificar columnas. Estas funciones son <em>mutate</em> y <em>transmute</em>. Mutate permite agregar una columna nueva al dataframe. Transmute hace lo mismo pero además elimina el resto de las columnas, permitiendo hacer un select implícito.</p>
+<p>Para empezar, vamos a querer volver a tener una variable que idenfique la institución, su nombre será institucion y su contenido “Asociación de Salud Federal del Estado”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_columnas <span class="ot">&lt;-</span> df_filtrado_asfe <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">institucion =</span> <span class="st">"Asociación de Salud Federal del Estado"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_columnas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  sexo  fecha_nacimiento documento   area      salario es_accionista institucion
+  &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;      
+1 M     24/08/1990       31-054-1896 Training     3883             1 Asociación…
+2 M     11/04/1984       93-328-1614 Training     3304             0 Asociación…
+3 F     07/10/1986       83-633-7650 Human Re…    2493             0 Asociación…
+4 F     19/04/1982       04-065-8324 Services      627             1 Asociación…
+5 M     07/09/1986       49-644-6789 Marketing    2397             0 Asociación…
+6 M     08/06/1990       66-578-6374 Product …     287             1 Asociación…</code></pre>
+</div>
+</div>
+<p>Nos interesará generar una variable genero que sustituya a la columna sexo y sea el mismo contenido pero en texto. Para esto podemos usar la función <a href="https://dplyr.tidyverse.org/reference/if_else.html"><em>if_else</em></a><em>.</em> Esta función básicamente realiza el mismo trabajo que la función de excel: le insertamos una condición y luego el siguiente parámetro es el que inserta en caso de que la condición se cumpla, y el siguiente en caso que no. Luego, eliminaremos la variable sexo ya que no la utilizaremos y renombraremos la creada como su original.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_columnas <span class="ot">&lt;-</span> df_columnas <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">genero =</span> <span class="fu">if_else</span>(sexo <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sexo) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">sexo =</span> genero)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_columnas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  fecha_nacimiento documento   area      salario es_accionista institucion sexo 
+  &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
+1 24/08/1990       31-054-1896 Training     3883             1 Asociación… Mujer
+2 11/04/1984       93-328-1614 Training     3304             0 Asociación… Mujer
+3 07/10/1986       83-633-7650 Human Re…    2493             0 Asociación… Mujer
+4 19/04/1982       04-065-8324 Services      627             1 Asociación… Mujer
+5 07/09/1986       49-644-6789 Marketing    2397             0 Asociación… Mujer
+6 08/06/1990       66-578-6374 Product …     287             1 Asociación… Mujer</code></pre>
+</div>
+</div>
+<p>Realizar esta serie de pasos es con el fin de mostrar el uso del <em>select</em> para eliminar columnas de otra manera que seleccionando las que queremos: seleccionando las que no queremos. <strong>Si en <em>mutate</em> se hubiera puesto como nombre de variable <em>sexo,</em> hubiera sustituido a la original.</strong></p>
+<p>En este caso <em>if_else</em> resulta de utilidad porque la cantidad de condiciones eran pocas. En caso que se sean muchas, empieza a ser ineficiente en la medida que hay que concatenar if_else tras if_else. Para los casos en los que haya muchas posibilidades, es mejor usar <a href="https://dplyr.tidyverse.org/reference/case_when.html?q=case_when#ref-usage"><em>case_when</em></a><em>.</em></p>
+<p>Para demostrar el uso de esta función, crearemos una variable que diga si el documento es de menos de un millón, mayor a un millón, mayor a dos millones, a tres, a cuatro, y mayor a cinco. Al final de la función, se le especifica el tipo de dato de la variable resultante.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_columnas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">franja_salario =</span> <span class="fu">case_when</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">4000</span> <span class="sc">~</span> <span class="st">"Mayor a cuatro mil"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">3000</span> <span class="sc">~</span> <span class="st">"Mayor a tres mil, menor o igual a cuatro mil"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">2000</span> <span class="sc">~</span> <span class="st">"Mayor a dos mil, menor o igual a tres mil"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">~</span> <span class="st">"Mayor a mil, menor o igual a dos mil"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Menor o igual a mil"</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 148 × 8
+   fecha_nacimiento documento   area     salario es_accionista institucion sexo 
+   &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
+ 1 24/08/1990       31-054-1896 Training    3883             1 Asociación… Mujer
+ 2 11/04/1984       93-328-1614 Training    3304             0 Asociación… Mujer
+ 3 07/10/1986       83-633-7650 Human R…    2493             0 Asociación… Mujer
+ 4 19/04/1982       04-065-8324 Services     627             1 Asociación… Mujer
+ 5 07/09/1986       49-644-6789 Marketi…    2397             0 Asociación… Mujer
+ 6 08/06/1990       66-578-6374 Product…     287             1 Asociación… Mujer
+ 7 02/04/1982       51-105-8497 Researc…    2855             1 Asociación… Mujer
+ 8 11/06/1984       27-296-9259 Legal       3992             1 Asociación… Mujer
+ 9 31/07/1982       60-141-4356 Account…    1320             0 Asociación… Mujer
+10 18/04/1986       85-181-4795 Sales       1646             0 Asociación… Mujer
+# ℹ 138 more rows
+# ℹ 1 more variable: franja_salario &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Tal como puede apreciarse, se puede utilizar tidyverse para mostrar resultados en consola. No es necesario almacenar los procesos en objetos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_filtrado_asfe <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">genero =</span> <span class="fu">if_else</span>(sexo <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sexo) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">sexo =</span> genero)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 148 × 6
+   fecha_nacimiento documento   area                 salario es_accionista sexo 
+   &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;
+ 1 24/08/1990       31-054-1896 Training                3883             1 Mujer
+ 2 11/04/1984       93-328-1614 Training                3304             0 Mujer
+ 3 07/10/1986       83-633-7650 Human Resources         2493             0 Mujer
+ 4 19/04/1982       04-065-8324 Services                 627             1 Mujer
+ 5 07/09/1986       49-644-6789 Marketing               2397             0 Mujer
+ 6 08/06/1990       66-578-6374 Product Management       287             1 Mujer
+ 7 02/04/1982       51-105-8497 Research and Develo…    2855             1 Mujer
+ 8 11/06/1984       27-296-9259 Legal                   3992             1 Mujer
+ 9 31/07/1982       60-141-4356 Accounting              1320             0 Mujer
+10 18/04/1986       85-181-4795 Sales                   1646             0 Mujer
+# ℹ 138 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="combinación-de-filtros" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="combinación-de-filtros"><span class="header-section-number">4.4</span> Combinación de filtros</h2>
+<p>En el uso del <em>case_when</em> se pueden generar condiciones combinadas para alcanzar resultados más precisos. En el ejemplo anterior, se utilizó un método que implicaba ir de arriba hacía abajo con el filtro, pero lo más razonable sería combinar filtros para ser más robusto con la condición.</p>
+<p>Vamos a pedirle a R que los valore que para cada caso sea mayor que determinado valor, pero también menor al de la siguiente categoría. De este modo no importa el orden de las condiciones, ya que son muy precisas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df_columnas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">franja_salario =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">4000</span> <span class="sc">~</span> <span class="st">"Mayor a cuatro mil"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">3000</span> <span class="sc">&amp;</span> salario <span class="sc">&lt;=</span> <span class="dv">4000</span> <span class="sc">~</span> <span class="st">"Mayor a tres mil, menor o igual a cuatro mil"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">2000</span> <span class="sc">&amp;</span> salario <span class="sc">&lt;=</span> <span class="dv">3000</span> <span class="sc">~</span> <span class="st">"Mayor a dos mil, menor o igual a tres mil"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    salario <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">&amp;</span> salario <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">~</span> <span class="st">"Mayor a mil, menor o igual a dos mil"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Menor o igual a mil"</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 148 × 8
+   fecha_nacimiento documento   area     salario es_accionista institucion sexo 
+   &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;
+ 1 24/08/1990       31-054-1896 Training    3883             1 Asociación… Mujer
+ 2 11/04/1984       93-328-1614 Training    3304             0 Asociación… Mujer
+ 3 07/10/1986       83-633-7650 Human R…    2493             0 Asociación… Mujer
+ 4 19/04/1982       04-065-8324 Services     627             1 Asociación… Mujer
+ 5 07/09/1986       49-644-6789 Marketi…    2397             0 Asociación… Mujer
+ 6 08/06/1990       66-578-6374 Product…     287             1 Asociación… Mujer
+ 7 02/04/1982       51-105-8497 Researc…    2855             1 Asociación… Mujer
+ 8 11/06/1984       27-296-9259 Legal       3992             1 Asociación… Mujer
+ 9 31/07/1982       60-141-4356 Account…    1320             0 Asociación… Mujer
+10 18/04/1986       85-181-4795 Sales       1646             0 Asociación… Mujer
+# ℹ 138 more rows
+# ℹ 1 more variable: franja_salario &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="agregaciones" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="agregaciones"><span class="header-section-number">4.5</span> Agregaciones</h2>
+<p>Cuestión frecuente en el análisis de datos es la de generar tablas agregadas. Para tales usos el tidyverse tiene dos funciones que son clave: <em>group_by</em> y <em>summarise</em>.</p>
+<p><em>Group_by</em>, tal como su nombre lo indica, sirve para generar agrupaciones a partir de una variable. Para utilizarla no debemos más que declarar cuál variable queremos utilizar para agrupar.</p>
+<p>La función <em>summarise</em>, por otra parte, realiza las agregaciones que el analista requiere a partir de la agrupación declarada. Para practicar esto, volveremos a nuestro dataframe filtrado, y realizaremos una agrupación a partir de cada mutualista, mostrando la cantidad de personal para cada una.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n</span>())</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  institucion     cantidad
+  &lt;chr&gt;              &lt;int&gt;
+1 ASFE                 148
+2 Blue Light           156
+3 RedHat Hospital      157
+4 St. Mokaroo          162</code></pre>
+</div>
+</div>
+<p>Cuando usamos <em>summarise</em>, se debe elegir el nombre de la(s) columna(s) resumen, y utilizar una función de agregación. <strong>Las más clasicas son <em>sum, mean, max, min</em></strong>, etc. Si queremos saber la cantidad de registros, lo que vendría a ser un <em>count</em>, podemos usar la función <em>n</em> también.</p>
+<p>El <em>dataframe</em> resultante nos muestra la cantidad de registros por cada elemento de la columna <em>institucion</em>. Pero tal como puede apreciarse, el orden de estos elementos está pautado por el orden alfabético de la columna agrupada. Podemos pedirle a R que ordene a partir de otra columna con la función <em>arrange.</em> Esta función ordena por defecto de forma ascendente, si le ponemos <em>desc</em> a la columna, ordena de la otra forma.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cantidad))</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  institucion     cantidad
+  &lt;chr&gt;              &lt;int&gt;
+1 St. Mokaroo          162
+2 RedHat Hospital      157
+3 Blue Light           156
+4 ASFE                 148</code></pre>
+</div>
+</div>
+<p>Ahora que nuestra tabla agregada está ordenada y clara, nos resulta relevante tener la certeza de que refleja la información solicitada. Es decir, si cada registro condice con una persona. Este elemento se denomina perfil del dato y relevante tenerlo claro a la hora de realizar un análisis, ya que en otro caso podemos dar información incorrecta.</p>
+<p>Para asegurarnos de tener la cantidad exacta de personas por institución, debemos tener el recuento de cédulas distintas que hay, por tanto no conteo simple no nos habilita esa posibilidad. Para esto podemos usar la función <em>n_distinct</em> que justamente trae un conteo de los valores únicos para cada columna. A diferencia de <em>n</em>, a <em>n_distinct</em> debemos aclararle con qué columna estamos trabajando. En este caso, el resultado nos dará igual porque hay un solo caso por persona, pero si hubieran duplicados por institución, la cantidad sería menor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cantidad))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  institucion     cantidad
+  &lt;chr&gt;              &lt;int&gt;
+1 St. Mokaroo          162
+2 RedHat Hospital      157
+3 Blue Light           156
+4 ASFE                 148</code></pre>
+</div>
+</div>
+<p>Otro análisis que podríamos hacer es qué porcentaje del total del personal tiene cada mutualista. Para hacer esto hay que generar una columna nueva luego de hacer la agrupación, podemos usar <em>mutate</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona)) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cantidad)) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">porcentaje =</span> cantidad <span class="sc">/</span> <span class="fu">sum</span>(cantidad) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  institucion     cantidad porcentaje
+  &lt;chr&gt;              &lt;int&gt;      &lt;dbl&gt;
+1 St. Mokaroo          162       26.0
+2 RedHat Hospital      157       25.2
+3 Blue Light           156       25.0
+4 ASFE                 148       23.8</code></pre>
+</div>
+</div>
+<p>El porcentaje funciona correctamente pero ver tantos decimales aporta poco para el análisis en este caso. Podemos redondear los elementos de las columnas utilizando la función <em>round.</em> Esta función tiene dos parámetros: el número o columna que debe redondear, y la cantidad de decimales que debe permitir. En este caso le pondremos 0.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona)) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cantidad)) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">porcentaje =</span> <span class="fu">round</span>(cantidad <span class="sc">/</span> <span class="fu">sum</span>(cantidad) <span class="sc">*</span> <span class="dv">100</span>,<span class="dv">0</span>))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(personal_por_institucion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  institucion     cantidad porcentaje
+  &lt;chr&gt;              &lt;int&gt;      &lt;dbl&gt;
+1 St. Mokaroo          162         26
+2 RedHat Hospital      157         25
+3 Blue Light           156         25
+4 ASFE                 148         24</code></pre>
+</div>
+</div>
+<p>También es posible realizar agregaciones por más de una variable. Por ejemplo, sería interesante conocer la cantidad de personas por institución pero también a nivel de sexo. Para esto, debemos agrupar por institución y por sexo, y luego sumarisar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion, sexo,) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona))</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 3
+# Groups:   institucion [4]
+  institucion     sexo  cantidad
+  &lt;chr&gt;           &lt;chr&gt;    &lt;int&gt;
+1 ASFE            F           66
+2 ASFE            M           82
+3 Blue Light      F           84
+4 Blue Light      M           72
+5 RedHat Hospital F           79
+6 RedHat Hospital M           78
+7 St. Mokaroo     F           71
+8 St. Mokaroo     M           91</code></pre>
+</div>
+</div>
+<p>¿Se acuerdan cómo modificamos nuestra variable sexo a una con caracteres y no numérica? Podemos hacer todo en un solo paso para que quede más legible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_1 =</span> <span class="fu">if_else</span>(sexo <span class="sc">==</span> <span class="st">"M"</span>, <span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion, sexo_1) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona))</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>personal_por_institucion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 3
+# Groups:   institucion [4]
+  institucion     sexo_1 cantidad
+  &lt;chr&gt;           &lt;chr&gt;     &lt;int&gt;
+1 ASFE            Hombre       82
+2 ASFE            Mujer        66
+3 Blue Light      Hombre       72
+4 Blue Light      Mujer        84
+5 RedHat Hospital Hombre       78
+6 RedHat Hospital Mujer        79
+7 St. Mokaroo     Hombre       91
+8 St. Mokaroo     Mujer        71</code></pre>
+</div>
+</div>
+<p>Quizás no nos interesa verlo en términos de hombre o mujer, y solo nos interesan los hombres. Podemos incorporar un filtro previamente y eso hace el trabajo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>personal_por_institucion <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sexo <span class="sc">==</span> <span class="st">"M"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona)) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cantidad))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(personal_por_institucion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  institucion     cantidad
+  &lt;chr&gt;              &lt;int&gt;
+1 St. Mokaroo           91
+2 ASFE                  82
+3 RedHat Hospital       78
+4 Blue Light            72</code></pre>
+</div>
+</div>
+</section>
+<section id="desagregaciones" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="desagregaciones"><span class="header-section-number">4.6</span> Desagregaciones</h2>
+<p>¿Y si quisiéramos ver el porcentaje de personal por sexo para cada institución? Para ese caso vamos a necesitar la función <em>ungroup,</em> que hace exactamente lo opuesto que el <em>group_by</em>, desagrega por la variable seleccionada.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>personal_por_sexo <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_1 =</span> <span class="fu">if_else</span>(sexo <span class="sc">==</span> <span class="st">"M"</span>, <span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion, sexo_1) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cantidad =</span> <span class="fu">n_distinct</span>(cod_persona)) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">porcentaje =</span> <span class="fu">round</span>(cantidad <span class="sc">/</span> <span class="fu">sum</span>(cantidad) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>personal_por_sexo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  institucion     sexo_1 cantidad porcentaje
+  &lt;chr&gt;           &lt;chr&gt;     &lt;int&gt;      &lt;dbl&gt;
+1 ASFE            Hombre       82         55
+2 ASFE            Mujer        66         45
+3 Blue Light      Hombre       72         46
+4 Blue Light      Mujer        84         54
+5 RedHat Hospital Hombre       78         50
+6 RedHat Hospital Mujer        79         50
+7 St. Mokaroo     Hombre       91         56
+8 St. Mokaroo     Mujer        71         44</code></pre>
+</div>
+</div>
+<p>Siempre resulta conveniente ejecutar estos ejemplos linea por linea y ver qué resultado va dando, el intentar leer toda la <em>pipeline</em> (así se denomina a una sucesión de acciones unidas por <em>pipes</em>) puede ser confuso si no se está familiarizado aún con las funciones.</p>
+</section>
+<section id="desafío" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="desafío"><span class="header-section-number">4.7</span> Desafío</h2>
+<p>Vamos a querer hacer un análisis que requerirá de todas nuestras herramientas analíticas.</p>
+<ul>
+<li><p>Debe crearse una tabla que muestre la cantidad de personas por institución y sexo.</p></li>
+<li><p>También debe indicar la cantidad del personal que sea accionista (socio) de la institución, y el porcentaje.</p></li>
+<li><p>Finalmente, debe tener una variable que indique si la institución tiene accionistas hombres y mujeres, solo hombres, solo mujeres, o si no tiene accionistas.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Solución</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>personal_accionista <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_1 =</span> <span class="fu">if_else</span>(sexo <span class="sc">==</span> <span class="st">"M"</span>, <span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion, sexo_1) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cantidad_personas =</span> <span class="fu">n_distinct</span>(cod_persona),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">accionistas =</span> <span class="fu">sum</span>(socio)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tiene_accionistas_h =</span> <span class="fu">if_else</span>(accionistas <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> sexo_1 <span class="sc">==</span> <span class="st">"Hombre"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">tiene_accionistas_m =</span> <span class="fu">if_else</span>(accionistas <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> sexo_1 <span class="sc">==</span> <span class="st">"Mujer"</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">tipo_accionistas =</span> <span class="fu">case_when</span>(</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(tiene_accionistas_h) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">sum</span>(tiene_accionistas_m) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Tiene accionistas de ambos sexos"</span>,</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(tiene_accionistas_h) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> <span class="fu">sum</span>(tiene_accionistas_m) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Tiene accionistas solo mujeres"</span>,</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(tiene_accionistas_h) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">sum</span>(tiene_accionistas_m) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Tiene accionistas solo hombres"</span>,</span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(tiene_accionistas_h) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> <span class="fu">sum</span>(tiene_accionistas_m) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"No tiene accionistas en su personal"</span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">porcentaje_accionistas =</span> <span class="fu">round</span>(<span class="fu">sum</span>(accionistas) <span class="sc">/</span> <span class="fu">sum</span>(cantidad_personas) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">0</span>)</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>tiene_accionistas_h, <span class="sc">-</span>tiene_accionistas_m) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(institucion) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">cantidad_personas =</span> <span class="fu">sum</span>(cantidad_personas),</span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">cantidad_accionistas =</span> <span class="fu">sum</span>(accionistas),</span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">porcentaje_accionistas =</span> <span class="fu">max</span>(porcentaje_accionistas),</span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">tipo_accionistas =</span> <span class="fu">max</span>(tipo_accionistas)</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/dataframes.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Estructura de data frames</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/data_manipulation.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulación de datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
